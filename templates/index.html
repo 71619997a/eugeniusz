@@ -2,16 +2,18 @@
   <head>
     <script src="https://threejs.org/build/three.min.js"></script>
     <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/MTLLoader.js"></script>
+
     <title>Light Cycle</title>
   </head>
   <body>
     <script>
-
+    		// stolen from three.js demo
 			var container;
 
-			var camera, scene, renderer;
+			var camera, scene, renderer, model;
 
-			var mouseX = 0, mouseY = 0;
+			var mouseX = 0, mouseY = 0, loaded = false;
 
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
@@ -63,7 +65,7 @@
 
 
 				var loader = new THREE.ImageLoader( manager );
-				loader.load( 'static/model/SLC_mat2_d.tga', function ( image ) {
+				loader.load( 'static/model/SLC_mat1_d.tga', function ( image ) {
 
 					texture.image = image;
 					texture.needsUpdate = true;
@@ -71,24 +73,36 @@
 				} );
 
 				// model
+				var mtlloader = new THREE.MTLLoader(manager);
+				mtlloader.setPath('static/model/');
+				mtlloader.load('Super\ Light\ Cycle.mtl', function(materials) {
+					materials.preload();
+					var objloader = new THREE.OBJLoader( manager );
+					objloader.setMaterials(materials);
+					objloader.setPath('static/model/');
+					objloader.load( 'Super\ Light\ Cycle.obj', function ( object ) {
+						model = object;
+						loaded = true;
+						// object.traverse( function ( child ) {
 
-				var loader = new THREE.OBJLoader( manager );
-				loader.load( 'static/model/Super\ Light\ Cycle.obj', function ( object ) {
+						// 	if ( child instanceof THREE.Mesh ) {
 
-					object.traverse( function ( child ) {
+						// 		child.material.map = texture;
 
-						if ( child instanceof THREE.Mesh ) {
+						// 	}
 
-							child.material.map = texture;
+						// } );
+						// console.log(object.position);
+						// console.log(object.scale);
+						// console.log(object.quaternion);
+						object.scale.x = 30;
+						object.scale.y = 30;
+						object.scale.z = 30;
+						//object.position.y = -95;
+						scene.add( object );
 
-						}
-
-					} );
-
-					object.position.y = - 95;
-					scene.add( object );
-
-				}, onProgress, onError );
+					}, onProgress, onError );
+				}, onProgress, onError);
 
 				//
 
@@ -102,7 +116,7 @@
 				//
 
 				window.addEventListener( 'resize', onWindowResize, false );
-
+				console.log(scene);
 			}
 
 			function onWindowResize() {
@@ -129,17 +143,21 @@
 			function animate() {
 
 				requestAnimationFrame( animate );
-				render();
+				if(loaded)
+					render();
+				else
+					console.log('Loading...');
 
 			}
 
 			function render() {
 
-				camera.position.x += ( mouseX - camera.position.x ) * .05;
-				camera.position.y += ( - mouseY - camera.position.y ) * .05;
+				//camera.position.x += ( mouseX - camera.position.x ) * .05;
+				//camera.position.y += ( - mouseY - camera.position.y ) * .05;
 
-				camera.lookAt( scene.position );
-
+				//camera.lookAt( scene.position );
+				model.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
+				model.rotation.x = mouseY / window.innerHeight * 4 * Math.PI;
 				renderer.render( scene, camera );
 
 			}
