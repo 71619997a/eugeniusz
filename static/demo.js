@@ -2,12 +2,17 @@
 var container;
 
 var camera, scene, renderer, model, manager;
-
+var data = [0,0,0]
 var mouseX = 0, mouseY = 0, loaded = false, color = 'blu';
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+socket.on('data', function(dat) {
+    data = dat;
+})
 
 function init() {
 
@@ -143,8 +148,10 @@ function onDocumentMouseMove( event ) {
 function animate() {
 
     requestAnimationFrame( animate );
-    if(loaded)
+    if(loaded) {
         render();
+	socket.emit('getdata', {}, function(){})
+    }
     else
         console.log('Loading...');
 
@@ -156,6 +163,7 @@ function render() {
     //camera.position.y += ( - mouseY - camera.position.y ) * .05;
 
     //camera.lookAt( scene.position );
+    model.position.x = data[0];
     model.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
     model.rotation.x = mouseY / window.innerHeight * 4 * Math.PI;
     renderer.render( scene, camera );
