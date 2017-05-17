@@ -149,8 +149,9 @@ function animate() {
 
     requestAnimationFrame( animate );
     if(loaded) {
+	console.log(data);
         render();
-	socket.emit('getdata', {}, function(){})
+	socket.emit('getdata', {'username': username})
     }
     else
         console.log('Loading...');
@@ -163,7 +164,7 @@ function render() {
     //camera.position.y += ( - mouseY - camera.position.y ) * .05;
 
     //camera.lookAt( scene.position );
-    model.position.x = data[0];
+    model.position.x = data.pos[0];
     model.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
     model.rotation.x = mouseY / window.innerHeight * 4 * Math.PI;
     renderer.render( scene, camera );

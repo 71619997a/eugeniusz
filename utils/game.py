@@ -1,12 +1,20 @@
 import time
 import eventlet
-car = [0,0,0]
+from player import Player
 
+
+players = []
 def data(json):
-    return car
+    for player in players:
+        if player.name == json['username']:
+            return {'pos': player.pos, 'dir': player.dir}
+    return {}
 
-
+def addUser(user):
+    players.append(Player(user))
 def run():
     while True:
-        car[0] += 1
+        for player in players:
+            player.pos[0] += 1
+            player.dir -= 1
         eventlet.sleep(1./120)
