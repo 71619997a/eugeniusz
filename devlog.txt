@@ -1,5 +1,9 @@
 farhanH -- 2017-05-12 23:00
-Completed Design Document
+    -Completed Design Document
+
+nobelG -- 2017-05-18 14:25
+    -Create game-y thing
+    -2d plane to move on, sphere (temp.) that moves, handles keyboard input
 
 seijiY -- 2017-05-12 23:00
 gabrielM -- 2017-05-12 23:00
