@@ -7,7 +7,9 @@ players = []
 def data(json):
     for player in players:
         if player.name == json['username']:
+            print 'player %s found'
             return {'pos': player.pos, 'dir': player.dir}
+    print 'player %s not found' % (json['username'])
     return {}
 
 def addUser(user):

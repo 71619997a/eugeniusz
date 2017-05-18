@@ -35,6 +35,7 @@ def login():
     
 @socketio.on('getdata')
 def givedata(json):
+    print 'client requested data'
     emit('data', game.data(json))
 
 if __name__ == '__main__':

@@ -1,8 +1,9 @@
 // taken from three.js demo
+socket.emit('getdata', {'username': username});
 var container;
 
 var camera, scene, renderer, model, manager;
-var data = [0,0,0]
+var data = {}
 var mouseX = 0, mouseY = 0, loaded = false, color = 'blu';
 
 var windowHalfX = window.innerWidth / 2;
@@ -11,6 +12,7 @@ var windowHalfY = window.innerHeight / 2;
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 
 socket.on('data', function(dat) {
+    console.log("received data");
     data = dat;
 })
 
@@ -151,7 +153,8 @@ function animate() {
     if(loaded) {
 	console.log(data);
         render();
-	socket.emit('getdata', {'username': username})
+	socket.emit('getdata', {'username': username});
+	
     }
     else
         console.log('Loading...');
