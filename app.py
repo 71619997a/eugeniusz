@@ -32,7 +32,7 @@ def login():
             <p><input type=submit value=Login>
         </form>
     '''
-    
+
 @socketio.on('getdata')
 def givedata(json):
     print 'client requested data'

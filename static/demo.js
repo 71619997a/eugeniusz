@@ -1,5 +1,5 @@
 // taken from three.js demo
-socket.emit('getdata', {'username': username});
+
 var container;
 
 var camera, scene, renderer, model, manager;
@@ -10,11 +10,20 @@ var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
 var socket = io.connect('http://' + document.domain + ':' + location.port);
+socket.emit('getdata', {'username': username});
 
 socket.on('data', function(dat) {
-    console.log("received data");
+    console.log("got data");
+    console.log("pos: ("+str(dat.pos[0])+", "+str(dat.pos[1])+")")
     data = dat;
 })
+
+function doKey(e) {
+    c = fromCharCode(e.keyCode);
+    if(c == "A" || c == "S" || c == "W" || c == "D") {
+        socket.emit('update', {'username': username, 'key': c, 'event': 'keyboard'});
+    }
+}
 
 function init() {
 
@@ -67,7 +76,7 @@ function init() {
     document.addEventListener( 'mousemove', onDocumentMouseMove, false );
     document.addEventListener('click', onDocumentClick, false);
     //
-
+    window.addEventListener('keydown', doKey, false);
     window.addEventListener( 'resize', onWindowResize, false );
     console.log(scene);
 }
@@ -151,10 +160,9 @@ function animate() {
 
     requestAnimationFrame( animate );
     if(loaded) {
-	console.log(data);
-        render();
-	socket.emit('getdata', {'username': username});
-	
+        if(data !== {})
+            render();
+        socket.emit('getdata', {'username': username});
     }
     else
         console.log('Loading...');
@@ -168,6 +176,7 @@ function render() {
 
     //camera.lookAt( scene.position );
     model.position.x = data.pos[0];
+    model.position.y = data.pos[1];
     model.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
     model.rotation.x = mouseY / window.innerHeight * 4 * Math.PI;
     renderer.render( scene, camera );
