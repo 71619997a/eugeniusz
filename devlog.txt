@@ -5,6 +5,11 @@ nobelG -- 2017-05-18 14:25
     -Create game-y thing
     -2d plane to move on, sphere (temp.) that moves, handles keyboard input
 
-seijiY -- 2017-05-12 23:00
 gabrielM -- 2017-05-12 23:00
-nobelG -- 2017-05-12 23:00
+    - added tester car that can rotate
+
+gabrielM -- 2017-05-22 14:00
+    - made tester car move with flask socket io, bugs
+
+gabrielM -- 2017-05-23 21:00
+    - multiplayer demo complete
