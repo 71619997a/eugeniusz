@@ -2,9 +2,9 @@
 
 var container;
 
-var models = [];
+var models = {};
 var camera, scene, renderer, manager;
-var data = [];
+var data = {};
 var mouseX = 0, mouseY = 0, loaded = false, color = 'blu';
 
 var windowHalfX = window.innerWidth / 2;
@@ -16,10 +16,6 @@ socket.emit('sendinput', {username: username, event: 'none'});
 
 socket.on('data', function(dat) {
     console.log("got data");
-    for(var i = data.length; i < dat.length; i++) {
-        loadModel(dat[i]['username'], 'red');
-        console.log("new model added");
-    }
     data = dat;
 });
 
@@ -106,8 +102,8 @@ function init() {
 
 var loadModel = function(name, color, f) {
     i = models.length;
-    models.push({});
-    models[i].loaded = false;
+    models[name] = {}
+    models[name].loaded = false;
     var mtlloader = new THREE.MTLLoader(manager);
     mtlloader.setPath('static/model/');
     mtlloader.load('SLC_' + color + '.mtl', function(materials) {
@@ -116,8 +112,8 @@ var loadModel = function(name, color, f) {
         objloader.setMaterials(materials);
         objloader.setPath('static/model/');
         objloader.load( 'SLC.obj', function ( object ) {
-            models[i] = object;
-            models[i].loaded = true;
+            models[name] = object;
+            models[name].loaded = true;
             // object.traverse( function ( child ) {
 
             // 	if ( child instanceof THREE.Mesh ) {
@@ -130,9 +126,9 @@ var loadModel = function(name, color, f) {
             // console.log(object.position);
             // console.log(object.scale);
             // console.log(object.quaternion);
-            object.scale.x = 30;
-            object.scale.y = 30;
-            object.scale.z = 30;
+            object.scale.x = 15;
+            object.scale.y = 15;
+            object.scale.z = 15;
             //object.position.y = -95;
             scene.add( object );
             if(f) f();
@@ -197,12 +193,11 @@ function render() {
     //camera.position.y += ( - mouseY - camera.position.y ) * .05;
 
     //camera.lookAt( scene.position );
-    for(var i = 0; i < data.length; i++) {
-        player = data[i];
-        if(!models[i].loaded) {
-            continue;
-        }
-        model = models[i]
+    for(var name in data) {
+        player = data[name];
+        if(!models.hasOwnProperty(name))
+            loadModel(name, 'red');
+        model = models[name]
         model.position.x = player.pos[0];
         model.position.y = player.pos[1];
     }

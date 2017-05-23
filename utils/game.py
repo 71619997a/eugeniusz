@@ -4,9 +4,9 @@ from player import Player
 
 players = []
 def data(json):
-    ret = []
+    ret = {}
     for player in players:
-        ret.append({'username': player.name, 'pos': player.pos, 'dir': player.dir})
+        ret[player.name] = {'pos': player.pos, 'dir': player.dir}
     return ret
 
 def update(json):
