@@ -2,8 +2,9 @@
 
 var container;
 
-var camera, scene, renderer, model, manager;
-var data = {}
+var models = [];
+var camera, scene, renderer, manager;
+var data = [];
 var mouseX = 0, mouseY = 0, loaded = false, color = 'blu';
 
 var windowHalfX = window.innerWidth / 2;
@@ -11,18 +12,39 @@ var windowHalfY = window.innerHeight / 2;
 
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 socket.emit('getdata', {'username': username});
+socket.emit('sendinput', {username: username, event: 'none'});
 
 socket.on('data', function(dat) {
     console.log("got data");
-    console.log("pos: ("+str(dat.pos[0])+", "+str(dat.pos[1])+")")
-    data = dat;
-})
-
-function doKey(e) {
-    c = fromCharCode(e.keyCode);
-    if(c == "A" || c == "S" || c == "W" || c == "D") {
-        socket.emit('update', {'username': username, 'key': c, 'event': 'keyboard'});
+    for(var i = data.length; i < dat.length; i++) {
+        loadModel(dat[i]['username'], 'red');
+        console.log("new model added");
     }
+    data = dat;
+});
+
+socket.on('connect', function() {
+    console.log('connected');
+});
+
+socket.on('getname', function() {
+    socket.emit('givename', {'username': username});
+});
+
+function key(e, t) {
+    console.log('key event');
+    c = String.fromCharCode(e.keyCode);
+    if(c == "A" || c == "S" || c == "W" || c == "D") {
+        socket.emit('sendinput', {username: username, key: c, event: 'keyboard', type: t});
+    }
+}
+
+function keyDown(e) {
+    return key(e, 'down');
+}
+
+function keyUp(e) {
+    return key(e, 'up');
 }
 
 function init() {
@@ -37,7 +59,7 @@ function init() {
 
     scene = new THREE.Scene();
 
-    var ambient = new THREE.AmbientLight( 0x101030 );
+    var ambient = new THREE.AmbientLight( 0x606060 );
     scene.add( ambient );
 
     var directionalLight = new THREE.DirectionalLight( 0xffeedd );
@@ -65,7 +87,7 @@ function init() {
     // } );
 
     // model
-    loadModel('blu');
+    //loadModel(username, 'blu');
     //
 
     renderer = new THREE.WebGLRenderer();
@@ -74,14 +96,18 @@ function init() {
     container.appendChild( renderer.domElement );
 
     document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-    document.addEventListener('click', onDocumentClick, false);
+    // document.addEventListener('click', onDocumentClick, false);
     //
-    window.addEventListener('keydown', doKey, false);
+    window.addEventListener('keydown', keyDown, false);
+    window.addEventListener('keyup', keyUp, false);
     window.addEventListener( 'resize', onWindowResize, false );
     console.log(scene);
 }
 
-var loadModel = function(color, f) {
+var loadModel = function(name, color, f) {
+    i = models.length;
+    models.push({});
+    models[i].loaded = false;
     var mtlloader = new THREE.MTLLoader(manager);
     mtlloader.setPath('static/model/');
     mtlloader.load('SLC_' + color + '.mtl', function(materials) {
@@ -90,8 +116,8 @@ var loadModel = function(color, f) {
         objloader.setMaterials(materials);
         objloader.setPath('static/model/');
         objloader.load( 'SLC.obj', function ( object ) {
-            model = object;
-            loaded = true;
+            models[i] = object;
+            models[i].loaded = true;
             // object.traverse( function ( child ) {
 
             // 	if ( child instanceof THREE.Mesh ) {
@@ -159,14 +185,10 @@ function onDocumentMouseMove( event ) {
 function animate() {
 
     requestAnimationFrame( animate );
-    if(loaded) {
-        if(data !== {})
-            render();
-        socket.emit('getdata', {'username': username});
-    }
-    else
-        console.log('Loading...');
-
+    console.log(data);
+    if(data !== {})
+        render();
+    socket.emit('getdata', {'username': username});
 }
 
 function render() {
@@ -175,10 +197,17 @@ function render() {
     //camera.position.y += ( - mouseY - camera.position.y ) * .05;
 
     //camera.lookAt( scene.position );
-    model.position.x = data.pos[0];
-    model.position.y = data.pos[1];
-    model.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
-    model.rotation.x = mouseY / window.innerHeight * 4 * Math.PI;
+    for(var i = 0; i < data.length; i++) {
+        player = data[i];
+        if(!models[i].loaded) {
+            continue;
+        }
+        model = models[i]
+        model.position.x = player.pos[0];
+        model.position.y = player.pos[1];
+    }
+    scene.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
+    scene.rotation.x = mouseY / window.innerHeight * 4 * Math.PI;
     renderer.render( scene, camera );
 
 }

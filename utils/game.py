@@ -4,15 +4,13 @@ from player import Player
 
 players = []
 def data(json):
+    ret = []
     for player in players:
-        if player.name == json['username']:
-            print 'player %s found'
-            return {'pos': player.pos, 'dir': player.dir}
-    print 'player %s not found' % (json['username'])
-    return {}
+        ret.append({'username': player.name, 'pos': player.pos, 'dir': player.dir})
+    return ret
 
 def update(json):
-    player = getPlayer(name)
+    player = getPlayer(json['username'])
     if json['event'] == 'keyboard':
         val = json['type'] == 'down'
         if json['key'] == 'W':
@@ -26,6 +24,7 @@ def update(json):
 
 def addUser(user):
     players.append(Player(user))
+    print players
 
 def getPlayer(name):
     for player in players:
