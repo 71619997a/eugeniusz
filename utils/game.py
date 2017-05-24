@@ -1,6 +1,8 @@
 import time
 import eventlet
 from player import Player
+from constants import *
+
 
 players = []
 def data(json):
@@ -12,15 +14,7 @@ def data(json):
 def update(json):
     player = getPlayer(json['username'])
     if json['event'] == 'keyboard':
-        val = json['type'] == 'down'
-        if json['key'] == 'W':
-            player.input.up = val
-        if json['key'] == 'A':
-            player.input.left = val
-        if json['key'] == 'S':
-            player.input.down = val
-        if json['key'] == 'D':
-            player.input.right = val
+        player.input.key = json['key']
 
 def addUser(user):
     players.append(Player(user))
@@ -30,18 +24,34 @@ def getPlayer(name):
     for player in players:
         if player.name == name:
             return player
+        
+def keyDir(key):
+    if key == 'W':
+        return UP
+    if key == 'D':
+        return RIGHT
+    if key == 'S':
+        return DOWN
+    if key == 'A':
+        return LEFT
+    return -1
+
 
 def run():
     while True:
         for player in players:
-            if player.input.up:
+            newDir = keyDir(player.input.key)
+            if player.dir != newDir:
+                if (player.dir + newDir) % 2 == 1:
+                    player.dir = newDir
+            if player.dir == UP:
                 player.pos[1] -= 1
-            if player.input.down:
-                player.pos[1] += 1
-            if player.input.left:
-                player.pos[0] -= 1
-            if player.input.right:
+            elif player.dir == RIGHT:
                 player.pos[0] += 1
+            elif player.dir == DOWN:
+                player.pos[1] += 1
+            elif player.dir == LEFT:
+                player.pos[0] -= 1
             #player.pos[0] += 1
             #player.dir -= 1
         eventlet.sleep(1./120)
