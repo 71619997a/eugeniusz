@@ -7,6 +7,9 @@ nobelG -- 2017-05-18 14:25
 
 gabrielM -- 2017-05-12 23:00
     - added tester car that can rotate
+   
+farhanH -- 2017-05-21 14:00
+    -Finsihed login.html and style.css
 
 gabrielM -- 2017-05-22 14:00
     - made tester car move with flask socket io, bugs
