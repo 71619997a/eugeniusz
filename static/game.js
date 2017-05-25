@@ -207,7 +207,12 @@ function render() {
         model.position.x = player.pos[0];
         model.position.z = player.pos[1];
 	model.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;
-
+	if(name === username) {
+	    camera.position.x = model.position.x + 600;
+	    camera.position.y = model.position.y + 50;
+	    camera.position.z = model.position.z + 600;
+	    camera.lookAt(model.position);
+	}
     }
     scene.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
     scene.rotation.x = mouseY / window.innerHeight * 4 * Math.PI;
