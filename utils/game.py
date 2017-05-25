@@ -26,24 +26,21 @@ def getPlayer(name):
             return player
         
 def keyDir(key):
-    if key == 'W':
-        return UP
     if key == 'D':
-        return RIGHT
-    if key == 'S':
-        return DOWN
+        return 1
     if key == 'A':
-        return LEFT
-    return -1
+        return -1
+    return 0
 
 
 def run():
     while True:
         for player in players:
-            newDir = keyDir(player.input.key)
-            if player.dir != newDir:
-                if (player.dir + newDir) % 2 == 1:
-                    player.dir = newDir
+            if player.input.key is not None:
+                ndir = keyDir(player.input.key)
+                player.dir += ndir
+                player.dir %= 4
+                player.input.key = None
             if player.dir == UP:
                 player.pos[1] -= 1
             elif player.dir == RIGHT:

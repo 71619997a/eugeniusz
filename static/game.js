@@ -2,6 +2,7 @@
 
 var container;
 
+var down = {'W': false, 'A': false, 'S': false, 'D': false};
 var models = {};
 var camera, scene, renderer, manager;
 var data = {};
@@ -27,20 +28,25 @@ socket.on('getname', function() {
     socket.emit('givename', {'username': username});
 });
 
-function key(e, t) {
-    console.log('key event');
-    c = String.fromCharCode(e.keyCode);
-    if(c == "A" || c == "S" || c == "W" || c == "D") {
-        socket.emit('sendinput', {username: username, key: c, event: 'keyboard', type: t});
-    }
+function sendKey(c) {
+        socket.emit('sendinput', {username: username, key: c, event: 'keyboard'});
 }
 
 function keyDown(e) {
-    return key(e, 'down');
+    c = String.fromCharCode(e.keyCode);
+    if(c == "A" || c == "S" || c == "W" || c == "D") {
+	if(down[c]) return;
+	else {
+	    down[c] = true;
+	    return sendKey(c);
+	}
+    }
 }
 
 function keyUp(e) {
-    return key(e, 'up');
+    c = String.fromCharCode(e.keyCode);
+    if(c == "A" || c == "S" || c == "W" || c == "D")
+	down[c] = false;
 }
 
 function init() {
@@ -200,7 +206,7 @@ function render() {
         model = models[name]
         model.position.x = player.pos[0];
         model.position.z = player.pos[1];
-	model.rotation.y = player.dir * Math.PI / 2;
+	model.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;
 
     }
     scene.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
