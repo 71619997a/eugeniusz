@@ -1,15 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Server</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Server</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/server.css">
+  
 </head>
+
 <body>
-
-<h3>Servers</h3>
-<img src="bird.jpg" alt="Bird">
-<h3>Server1</h3>
-
+        <div class="container">
+		
+            <!--Words Above Login Box-->
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <h1><i><strong>FIND</strong> A Game</i></h1>
+                </div>
+            </div>
+			
+            <!--Begin Login Box-->
+		    <div class="row">
+				<form action="/authenticate/" method="POST">
+					<button type="submit" class="btn btn-login">Server 1</button>
+					<br>
+					<br>
+					<button type="submit" class="btn btn-login">Server 2</button>
+				</form>				
+            </div>
+        </div>
 </body>
 </html>
