@@ -77,7 +77,7 @@ function init() {
 
     };
 
-    var texture = new THREE.Texture();
+    //var texture = new THREE.Texture();
 
 
     // var loader = new THREE.ImageLoader( manager );
@@ -92,12 +92,25 @@ function init() {
     //loadModel(username, 'blu');
     //
 
+    ///////////////////////////////
+    //FLOOR
+    ///////////////////////////////
+    var floorTexture = new THREE.ImageUtils.loadTexture('static/img/checkerboard.jpg')
+    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+    floorTexture.repeat.set(10,10);
+    var floorMaterial = new THREE.MeshBasicMaterial( {map:floorTexture, side: THREE.DoubleSide} )
+    var floorGeometry = new THREE.PlaneGeometry(1000,1000,10,10);
+    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.position.y = -0.5
+    floor.rotation.x = Math.PI / 2;
+    scene.add(floor);
+
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
-    document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+    // document.addEventListener( 'mousemove', onDocumentMouseMove, false );
     // document.addEventListener('click', onDocumentClick, false);
     //
     window.addEventListener('keydown', keyDown, false);
@@ -142,16 +155,6 @@ var loadModel = function(name, color, f) {
     }, onProgress, onError);
 };
 
-var onDocumentClick = function( e ) {
-    if(color == 'blu')
-        color = 'red';
-    else
-        color = 'blu';
-    oldModel = model;
-    loadModel(color, function() {
-        scene.remove(oldModel);
-    });
-}
 
 var onProgress = function ( xhr ) {
     if ( xhr.lengthComputable ) {
@@ -194,6 +197,7 @@ function animate() {
 }
 
 function render() {
+    renderer.render( scene, camera );
 
     //camera.position.x += ( mouseX - camera.position.x ) * .05;
     //camera.position.y += ( - mouseY - camera.position.y ) * .05;
@@ -208,15 +212,12 @@ function render() {
         model.position.z = player.pos[1];
 	model.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;
 	if(name === username) {
-	    camera.position.x = model.position.x + 600;
-	    camera.position.y = model.position.y + 50;
-	    camera.position.z = model.position.z + 600;
-	    camera.lookAt(model.position);
+        //Something
+        //camera.lookAt(model.position);
 	}
     }
     scene.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
     scene.rotation.x = mouseY / window.innerHeight * 4 * Math.PI;
-    renderer.render( scene, camera );
 
 }
 
