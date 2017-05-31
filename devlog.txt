@@ -22,3 +22,6 @@ farhanH -- 2017-05-29 15:14
 
 seijiY -- 2017-05-30 19:23
     -Fixed Camera rotation in game.js
+
+seijiY -- 2017-05-30 20:37
+    -Linked Farhan's login.html to app.py
