@@ -16,7 +16,7 @@ socket.emit('getdata', {'username': username});
 socket.emit('sendinput', {username: username, event: 'none'});
 
 socket.on('data', function(dat) {
-    console.log("got data");
+    //console.log("got data");
     data = dat;
 });
 
@@ -190,19 +190,13 @@ function onDocumentMouseMove( event ) {
 function animate() {
 
     requestAnimationFrame( animate );
-    console.log(data);
+    renderer.render(scene, camera);
     if(data !== {})
-        render();
+        update();
     socket.emit('getdata', {'username': username});
 }
 
-function render() {
-    renderer.render( scene, camera );
-
-    //camera.position.x += ( mouseX - camera.position.x ) * .05;
-    //camera.position.y += ( - mouseY - camera.position.y ) * .05;
-
-    //camera.lookAt( scene.position );
+function update() {
     for(var name in data) {
         player = data[name];
         if(!models.hasOwnProperty(name))
@@ -212,12 +206,23 @@ function render() {
         model.position.z = player.pos[1];
 	model.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;
 	if(name === username) {
-        //Something
-        //camera.lookAt(model.position);
+
+
+        var cameraOffset = new THREE.Vector3(50,50,200);
+        var axis = new THREE.Vector3(0,1,0);
+        var angle = model.rotation.y - Math.PI;
+        cameraOffset.applyAxisAngle(axis,angle);
+
+        newPos = model.position.clone().add( cameraOffset );
+        camera.position.x = newPos.x;
+        camera.position.y = newPos.y;
+        camera.position.z = newPos.z;
+        //console.log("camera: ", camera.position, "\nmodel: ", model.position);
+        camera.lookAt( model.position );
 	}
     }
-    scene.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
-    scene.rotation.x = mouseY / window.innerHeight * 4 * Math.PI;
+    //scene.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
+    //scene.rotation.x = mouseY / window.innerHeight * 4 * Math.PI;
 
 }
 

@@ -19,3 +19,6 @@ gabrielM -- 2017-05-23 21:00
 
 farhanH -- 2017-05-29 15:14
     -Finished server.html and server.css
+
+seijiY -- 2017-05-30 19:23
+    -Fixed Camera rotation in game.js
