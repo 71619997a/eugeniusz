@@ -25,3 +25,7 @@ seijiY -- 2017-05-30 19:23
 
 seijiY -- 2017-05-30 20:37
     -Linked Farhan's login.html to app.py
+
+seijiY -- 2017-05-30 22:03
+    - Added stats 
+    - Fixed div size so window scrollbar doesn't show
