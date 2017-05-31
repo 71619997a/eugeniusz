@@ -1,5 +1,3 @@
-// taken from three.js demo
-
 var container;
 
 var down = {'W': false, 'A': false, 'S': false, 'D': false};
@@ -58,7 +56,6 @@ function init() {
     camera.position.z = 250;
 
     // scene
-
     scene = new THREE.Scene();
 
     var ambient = new THREE.AmbientLight( 0x606060 );
@@ -69,7 +66,6 @@ function init() {
     scene.add( directionalLight );
 
     // texture
-
     manager = new THREE.LoadingManager();
     manager.onProgress = function ( item, loaded, total ) {
 
@@ -77,24 +73,8 @@ function init() {
 
     };
 
-    //var texture = new THREE.Texture();
 
-
-    // var loader = new THREE.ImageLoader( manager );
-    // loader.load( 'static/model/SLC_mat1_d.tga', function ( image ) {
-
-    // 	texture.image = image;
-    // 	texture.needsUpdate = true;
-
-    // } );
-
-    // model
-    //loadModel(username, 'blu');
-    //
-
-    ///////////////////////////////
-    //FLOOR
-    ///////////////////////////////
+    // floor
     var floorTexture = new THREE.ImageUtils.loadTexture('static/img/checkerboard.jpg')
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(10,10);
@@ -105,21 +85,21 @@ function init() {
     floor.rotation.x = Math.PI / 2;
     scene.add(floor);
 
+    // renderer
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
     // document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-    // document.addEventListener('click', onDocumentClick, false);
-    //
+
     window.addEventListener('keydown', keyDown, false);
     window.addEventListener('keyup', keyUp, false);
     window.addEventListener( 'resize', onWindowResize, false );
     console.log(scene);
 }
 
-var loadModel = function(name, color, f) {
+function loadModel(name, color, f) {
     i = models.length;
     models[name] = {}
     models[name].loaded = false;
@@ -155,19 +135,17 @@ var loadModel = function(name, color, f) {
     }, onProgress, onError);
 };
 
-
-var onProgress = function ( xhr ) {
+function onProgress( xhr ) {
     if ( xhr.lengthComputable ) {
         var percentComplete = xhr.loaded / xhr.total * 100;
         console.log( Math.round(percentComplete, 2) + '% downloaded' );
     }
 };
 
-var onError = function ( xhr ) {
+function onError( xhr ) {
 };
 
 function onWindowResize() {
-
     windowHalfX = window.innerWidth / 2;
     windowHalfY = window.innerHeight / 2;
 
@@ -175,20 +153,15 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
 
     renderer.setSize( window.innerWidth, window.innerHeight );
-
 }
 
+// not used
 function onDocumentMouseMove( event ) {
-
     mouseX = ( event.clientX - windowHalfX ) / 2;
     mouseY = ( event.clientY - windowHalfY ) / 2;
-
 }
 
-//
-
 function animate() {
-
     requestAnimationFrame( animate );
     renderer.render(scene, camera);
     if(data !== {})
@@ -204,28 +177,22 @@ function update() {
         model = models[name]
         model.position.x = player.pos[0];
         model.position.z = player.pos[1];
-	model.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;
-	if(name === username) {
+        model.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;
+        if(name === username) {
+            var cameraOffset = new THREE.Vector3(50,50,200);
+            var axis = new THREE.Vector3(0,1,0);
+            var angle = model.rotation.y - Math.PI;
+            cameraOffset.applyAxisAngle(axis,angle);
 
-
-        var cameraOffset = new THREE.Vector3(50,50,200);
-        var axis = new THREE.Vector3(0,1,0);
-        var angle = model.rotation.y - Math.PI;
-        cameraOffset.applyAxisAngle(axis,angle);
-
-        newPos = model.position.clone().add( cameraOffset );
-        camera.position.x = newPos.x;
-        camera.position.y = newPos.y;
-        camera.position.z = newPos.z;
-        //console.log("camera: ", camera.position, "\nmodel: ", model.position);
-        camera.lookAt( model.position );
-	}
+            newPos = model.position.clone().add( cameraOffset );
+            camera.position.x = newPos.x;
+            camera.position.y = newPos.y;
+            camera.position.z = newPos.z;
+            //console.log("camera: ", camera.position, "\nmodel: ", model.position);
+            camera.lookAt( model.position );
+        }
     }
-    //scene.rotation.y = mouseX / window.innerWidth * 4 * Math.PI + Math.PI / 2;
-    //scene.rotation.x = mouseY / window.innerHeight * 4 * Math.PI;
-
 }
-
 
 init();
 animate();
