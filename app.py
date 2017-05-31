@@ -22,13 +22,8 @@ def home():
 def login():
     if request.method == 'POST':
         session['username'] = request.form['username']
-        return play()
-    return '''
-        <form method="post">
-            <p><input type=text name=username>
-            <p><input type=submit value=Login>
-        </form>
-    '''
+        return redirect(url_for('play'))
+    return render_template('login.html')
 
 @app.route('/game')
 def play():
