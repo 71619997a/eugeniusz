@@ -2,7 +2,7 @@ var container;
 
 var down = {'W': false, 'A': false, 'S': false, 'D': false};
 var models = {};
-var camera, scene, renderer, manager;
+var camera, scene, renderer, manager, stats;
 var data = {};
 var mouseX = 0, mouseY = 0, loaded = false, color = 'blu';
 
@@ -90,6 +90,13 @@ function init() {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
+
+    //stats
+    stats = new Stats();
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.top = '0';
+    stats.domElement.style.zIndex = 100;
+    container.appendChild( stats.domElement );
 
     // document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
@@ -192,6 +199,7 @@ function update() {
             camera.lookAt( model.position );
         }
     }
+    stats.update();
 }
 
 init();
