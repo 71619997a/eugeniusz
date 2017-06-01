@@ -7,7 +7,6 @@ body {
     color: #888;
     line-height: 30px;
     text-align: center;
-	background-repeat: no-repeat;
 	background-color: #101010;
 }
 
@@ -19,37 +18,46 @@ h1, h2 {
 	margin-top: 10px;
 	font-size: 38px;
     font-weight: 100;
-    color: #FF8927;
+    color: #1FC9C8;
     line-height: 50px;
 }
 
 h3 {
 	font-size: 22px;
     font-weight: 300;
-    color: #FF8927;
+    color: #1FC9C8;
     line-height: 30px;
 }
 
-.btn {
-	background-color: rgba(0, 0, 0, 0.35);
-	color: #FF8927;
-	font-size: 25px;
-	text-align: left;
-	width: 100%;
+.form-box {
+	margin-top: 35px;
+
+}
+
+.form {
+	overflow: hidden;
+	padding: 0 25px 5px 25px;
+	background: rgba(0, 0, 0, 0.35);
+	text-align: center;
 	border-style: solid;
-	border-color: #FF8927;
-	padding: 10px;
+    border-color: rgba(0, 0, 0, 0.35);
 }
 
-footer {
-    position: fixed;
-    height: 50px;
-    bottom: 0;
-    width: 100%;
-	background-color: rgba(0, 0, 0, 0.35);
-	text-align: left;
+.form-text {
+	padding-top: 25px;
 }
 
-.form-control {
-	width: 10%;
+.form-text h3 { 
+	margin-top: 0; 
+	color: #fff; 
+	text-align: center;
+}
+.form-text p { 
+	opacity: 0.8; 
+	color: #fff;
+	text-align: center;
+}
+
+.form form button.btn {
+	width: 100%;
 }

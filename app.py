@@ -35,7 +35,7 @@ def login():
             return reg(user,pw)
         print 'None??'
         return redirect(url_for('home'))
-    return render_template('login.html')
+    return render_template('login.html', var = request.args.get('var'))
 
         # <form method="post">
         #     <p><input type=text name=username>

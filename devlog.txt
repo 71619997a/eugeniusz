@@ -33,3 +33,7 @@ seijiY -- 2017-05-30 22:03
 gabrielM -- 2017-06-01 22:15
     - Server-side walls and wall collision
     - Began implementing walls on client side and transmission via sockets
+    
+nobelG & farhanH -- 2017-06-01 14:43
+    -Error message on login.html
+    
