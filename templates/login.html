@@ -32,6 +32,9 @@
                         <div class="form-text">
                             <h3>Welcome</h3>
                             <p>Please enter your Username and Password to Login or Register</p>
+			    {% if var %}
+				<p>{{ var }}</p>
+			    {% endif %}
                         </div>
 					
                         <!--Username and Password Part-->
