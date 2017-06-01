@@ -29,3 +29,7 @@ seijiY -- 2017-05-30 20:37
 seijiY -- 2017-05-30 22:03
     - Added stats 
     - Fixed div size so window scrollbar doesn't show
+
+gabrielM -- 2017-06-01 22:15
+    - Server-side walls and wall collision
+    - Began implementing walls on client side and transmission via sockets

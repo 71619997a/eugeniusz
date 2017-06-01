@@ -4,6 +4,7 @@ var down = {'W': false, 'A': false, 'S': false, 'D': false};
 var models = {};
 var camera, scene, renderer, manager, stats;
 var data = {};
+var outdata = {'username': username, 'wallnums': {}}
 var mouseX = 0, mouseY = 0, loaded = false, color = 'blu';
 
 var windowHalfX = window.innerWidth / 2;
@@ -179,11 +180,23 @@ function animate() {
 function update() {
     for(var name in data) {
         player = data[name];
-        if(!models.hasOwnProperty(name))
-            loadModel(name, 'red');
+        if(!models.hasOwnProperty(name)) { // first time
+            loadModel(name, player.color);
+            model = models[name];
+            model.walls = player.walls
+            // render every wall
+        }
+        else {
+            model = models[name];
+            model.walls[-1] = player.wallupdate
+            if(player.hasOwnProperty('walls'))
+                model.walls += player.walls
+                // render new walls
+            // rerender updated wall
+        }
         model = models[name]
-        model.position.x = player.pos[0];
-        model.position.z = player.pos[1];
+        model.position.x = player.x;
+        model.position.z = player.y;
         model.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;
         if(name === username) {
             var cameraOffset = new THREE.Vector3(50,50,200);
