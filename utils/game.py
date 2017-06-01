@@ -13,10 +13,18 @@ def data(json):
             wallIdx = json['wallnums'][player.name] - 1
         else:
             wallIdx = -1
-        updateWall = player.walls[wallIdx]
-        newWalls = player.walls[wallIdx+1:]
-        ret[player.name] = {'pos': [player.x, player.y], 'dir': player.dir, 'color': player.color, 'wallupdate': updateWall.ends()}
-        if len(player.newWalls):
+        try:
+            updateWall = player.walls[wallIdx]
+            if wallIdx == len(player.walls):
+                newWalls = []
+            else:
+                newWalls = player.walls[wallIdx+1:]
+        except IndexError:
+            print 'ech', len(player.walls)
+            updateWall = player.walls[-1]
+            newWalls = []
+        ret[player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'wallupdate': updateWall.ends()}
+        if len(newWalls):
             ret[player.name]['walls'] = [wall.ends() for wall in newWalls]
     return ret
 
@@ -50,7 +58,7 @@ def run():
         # 1. build wall dicts
         for player in players:
             for wall in player.walls:
-                print wall.ends()
+                # print wall.ends()
                 wt = (wall.start, wall.end) if wall.start <= wall.end else (wall.end, wall.start)
                 if wall.dir == HORIZONTAL:
                     horizontals[wall.const] = wt

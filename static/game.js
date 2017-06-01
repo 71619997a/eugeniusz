@@ -11,7 +11,7 @@ var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
 var socket = io.connect('http://' + document.domain + ':' + location.port);
-socket.emit('getdata', {'username': username});
+socket.emit('getdata', outdata);
 socket.emit('sendinput', {username: username, event: 'none'});
 
 socket.on('data', function(dat) {
@@ -119,7 +119,7 @@ function loadModel(name, color, f) {
         objloader.setMaterials(materials);
         objloader.setPath('static/model/');
         objloader.load( 'SLC.obj', function ( object ) {
-            models[name] = object;
+            models[name].obj = object;
             models[name].loaded = true;
             // object.traverse( function ( child ) {
 
@@ -174,42 +174,47 @@ function animate() {
     renderer.render(scene, camera);
     if(data !== {})
         update();
-    socket.emit('getdata', {'username': username});
+    socket.emit('getdata', outdata);
 }
 
 function update() {
     for(var name in data) {
         player = data[name];
         if(!models.hasOwnProperty(name)) { // first time
+	    console.log('Loading model for ' + name);
             loadModel(name, player.color);
+	    console.log('Finished loadModel call, creating model.walls');
             model = models[name];
-            model.walls = player.walls
+            model.walls = player.walls;
+	    outdata['wallnums'][name] = model.walls.length;
             // render every wall
         }
         else {
             model = models[name];
             model.walls[-1] = player.wallupdate
-            if(player.hasOwnProperty('walls'))
+            if(player.hasOwnProperty('walls')) {
                 model.walls += player.walls
+		outdata['wallnums'][name] += player.walls.length;
                 // render new walls
+	    }
             // rerender updated wall
         }
         model = models[name]
-        model.position.x = player.x;
-        model.position.z = player.y;
-        model.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;
+        model.obj.position.x = player.x;
+        model.obj.position.z = player.y;
+        model.obj.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;
         if(name === username) {
             var cameraOffset = new THREE.Vector3(50,50,200);
             var axis = new THREE.Vector3(0,1,0);
-            var angle = model.rotation.y - Math.PI;
+            var angle = model.obj.rotation.y - Math.PI;
             cameraOffset.applyAxisAngle(axis,angle);
 
-            newPos = model.position.clone().add( cameraOffset );
+            newPos = model.obj.position.clone().add( cameraOffset );
             camera.position.x = newPos.x;
             camera.position.y = newPos.y;
             camera.position.z = newPos.z;
             //console.log("camera: ", camera.position, "\nmodel: ", model.position);
-            camera.lookAt( model.position );
+            camera.lookAt( model.obj.position );
         }
     }
     stats.update();
