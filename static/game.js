@@ -179,6 +179,13 @@ function animate() {
     socket.emit('getdata', outdata);
 }
 
+function wallColor(col) {
+    if(col === 'blu')
+	return #0030D0;
+    if(col === 'red')
+	return #D07010;
+    return #000000;
+
 function update() {
     for(var name in data) {
         player = data[name];
@@ -188,8 +195,13 @@ function update() {
 	    console.log('Finished loadModel call, creating model.walls');
             model = models[name];
             model.walls = player.walls;
+	    model.color = player.color;
+	    model.wallmat = new THREE.MeshBasicMaterial({color: wallColor(model.color)});
 	    outdata['wallnums'][name] = model.walls.length;
             // render every wall
+	    for (wall of model.walls) {
+		box = new THREE.BoxGeometry(10,10,10);
+	    }
         }
         else {
             model = models[name];
