@@ -187,6 +187,17 @@ function wallColor(col) {
     return 0;
 }
 
+function geomFromWall(wall) {
+    var bg = new THREE.BoxGeometry(wall[1][0] - wall[0][0] + 3, 100, wall[1][1] - wall[0][1] + 3);
+    ox = bg.vertices[0].x;
+    oy = bg.vertices[0].y;
+    oz = bg.vertices[0].z;
+    for(var i = 0; i < 8; i++) {
+	bg.vertices[i].x += ox;
+    }
+    return bg;
+}
+
 function update() {
     for(var name in data) {
         player = data[name];
@@ -202,8 +213,11 @@ function update() {
 	    outdata['wallnums'][name] = model.walls.length;
             // render every wall
 	    for (wall of model.walls) {
-		geom = new THREE.BoxGeometry(10,10,10);
+		geom = geomFromWall(wall);
 		box = new THREE.Mesh(geom, model.wallmat);
+		box.position.x = wall[0][0];
+		box.position.y = 100;
+		box.position.z = wall[0][1];
 		scene.add(box);
 		model.wallobjs.push(box);
 	    }
@@ -211,18 +225,25 @@ function update() {
         else {
             model = models[name];
             if(player.hasOwnProperty('walls') && player.nwalls !== model.walls.length) {
-		if (player.updatedwall === model.walls.length - 1)
+		if (player.updatedwall === model.walls.length - 1) {
 		    model.walls[player.updatedwall] = player.walls[0];
+		    model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[0];
+		}
 		else {
 		    start = model.walls[model.walls.length - 1][0];
 		    var idx = 0;
 		    while(idx < player.walls.length) {
 			if (player.walls[idx][0] === start) {
 			    model.walls[model.walls.length - 1] = player.walls[idx];
+			    model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[idx]);
 			}
 		    }
 		}
+		var l = model.walls.length;
                 model.walls = model.walls.concat(player.walls.slice(player.walls.length+model.walls.length-player.nwalls));
+		for (; l < model.walls.length; l++) {
+		    model.wallobjs[l] = geomFromWall(model.walls[l]);
+		}
 		outdata['wallnums'][name] = model.walls.length;
                 // render new walls
 	    }
