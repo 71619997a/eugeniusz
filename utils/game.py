@@ -23,7 +23,7 @@ def data(json):
             print 'ech', len(player.walls)
             updateWall = player.walls[-1]
             newWalls = []
-        ret[player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'wallupdate': updateWall.ends(), 'nwalls': len(player.walls}
+        ret[player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'wallupdate': updateWall.ends(), 'nwalls': len(player.walls)}
         if len(newWalls):
             ret[player.name]['walls'] = [wall.ends() for wall in newWalls]
     return ret
