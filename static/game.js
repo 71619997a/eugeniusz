@@ -208,7 +208,7 @@ function update() {
             model = models[name];
             model.walls[-1] = player.wallupdate
             if(player.hasOwnProperty('walls') && player.nwalls !== model.walls.length) {
-                model.walls += player.walls.slice(player.walls.length+model.walls.length-nwalls);
+                model.walls += player.walls.slice(player.walls.length+model.walls.length-player.nwalls);
 		outdata['wallnums'][name] = model.walls.length;
                 // render new walls
 	    }
