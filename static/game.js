@@ -196,19 +196,33 @@ function update() {
 	    console.log('Finished loadModel call, creating model.walls');
             model = models[name];
             model.walls = player.walls;
+	    model.wallobjs = [];
 	    model.color = player.color;
 	    model.wallmat = new THREE.MeshBasicMaterial({color: wallColor(model.color)});
 	    outdata['wallnums'][name] = model.walls.length;
             // render every wall
 	    for (wall of model.walls) {
-		box = new THREE.BoxGeometry(10,10,10);
+		geom = new THREE.BoxGeometry(10,10,10);
+		box = new THREE.Mesh(geom, model.wallmat);
+		scene.add(box);
+		model.wallobjs.push(box);
 	    }
         }
         else {
             model = models[name];
-            model.walls[-1] = player.wallupdate
             if(player.hasOwnProperty('walls') && player.nwalls !== model.walls.length) {
-                model.walls += player.walls.slice(player.walls.length+model.walls.length-player.nwalls);
+		if (player.updatedwall === model.walls.length - 1)
+		    model.walls[player.updatedwall] = player.walls[0];
+		else {
+		    start = model.walls[model.walls.length - 1][0];
+		    var idx = 0;
+		    while(idx < player.walls.length) {
+			if (player.walls[idx][0] === start) {
+			    model.walls[model.walls.length - 1] = player.walls[idx];
+			}
+		    }
+		}
+                model.walls = model.walls.concat(player.walls.slice(player.walls.length+model.walls.length-player.nwalls));
 		outdata['wallnums'][name] = model.walls.length;
                 // render new walls
 	    }

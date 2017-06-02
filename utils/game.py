@@ -12,20 +12,9 @@ def data(json):
         if player.name in json['wallnums']:
             wallIdx = json['wallnums'][player.name] - 1
         else:
-            wallIdx = -1
-        try:
-            updateWall = player.walls[wallIdx]
-            if wallIdx == len(player.walls):
-                newWalls = []
-            else:
-                newWalls = player.walls[wallIdx+1:]
-        except IndexError:
-            print 'ech', len(player.walls)
-            updateWall = player.walls[-1]
-            newWalls = []
-        ret[player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'wallupdate': updateWall.ends(), 'nwalls': len(player.walls)}
-        if len(newWalls):
-            ret[player.name]['walls'] = [wall.ends() for wall in newWalls]
+            wallIdx = 0
+        newWalls = [wall.ends() for wall in player.walls[wallIdx:]]
+        ret[player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'updatedwall': wallIdx, 'nwalls': len(player.walls), 'walls': newWalls}
     return ret
 
 def update(json):
