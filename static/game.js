@@ -174,7 +174,7 @@ function animate() {
     data = newData; // this way data remains constant for rendering
     requestAnimationFrame( animate );
     renderer.render(scene, camera);
-    if(data !== {})
+    if(newData !== {})
         update();
     socket.emit('getdata', outdata);
 }
@@ -185,6 +185,7 @@ function wallColor(col) {
     if(col === 'red')
 	return 0xD07010;
     return 0;
+}
 
 function update() {
     for(var name in data) {
