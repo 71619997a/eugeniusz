@@ -181,10 +181,10 @@ function animate() {
 
 function wallColor(col) {
     if(col === 'blu')
-	return #0030D0;
+	return 0x0030D0;
     if(col === 'red')
-	return #D07010;
-    return #000000;
+	return 0xD07010;
+    return 0;
 
 function update() {
     for(var name in data) {
