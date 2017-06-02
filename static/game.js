@@ -4,6 +4,7 @@ var down = {'W': false, 'A': false, 'S': false, 'D': false};
 var models = {};
 var camera, scene, renderer, manager, stats;
 var data = {};
+var newData = {};
 var outdata = {'username': username, 'wallnums': {}}
 var mouseX = 0, mouseY = 0, loaded = false, color = 'blu';
 
@@ -16,7 +17,7 @@ socket.emit('sendinput', {username: username, event: 'none'});
 
 socket.on('data', function(dat) {
     //console.log("got data");
-    data = dat;
+    newData = dat;
 });
 
 socket.on('connect', function() {
@@ -170,6 +171,7 @@ function onDocumentMouseMove( event ) {
 }
 
 function animate() {
+    data = newData; // this way data remains constant for rendering
     requestAnimationFrame( animate );
     renderer.render(scene, camera);
     if(data !== {})
@@ -192,9 +194,9 @@ function update() {
         else {
             model = models[name];
             model.walls[-1] = player.wallupdate
-            if(player.hasOwnProperty('walls')) {
-                model.walls += player.walls
-		outdata['wallnums'][name] += player.walls.length;
+            if(player.hasOwnProperty('walls') && player.nwalls !== model.walls.length) {
+                model.walls += player.walls.slice(player.walls.length+model.walls.length-nwalls);
+		outdata['wallnums'][name] = model.walls.length;
                 // render new walls
 	    }
             // rerender updated wall
