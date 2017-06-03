@@ -50,6 +50,15 @@ footer {
 	text-align: left;
 }
 
-.form-control {
-	width: 10%;
+.navbar-inverse {
+    background-color: rgba(0, 0, 0, 0.35);
+	border-bottom: 1px solid #FF8927;
+}
+
+li.current {
+	/*
+	border-left: 1px solid #FF8927;
+	border-right: 1px solid #FF8927;
+	*/
+	background-color: black;
 }
