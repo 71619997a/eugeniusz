@@ -1,0 +1,85 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300ita??lic,400italic,500,500italic,700,700italic,900italic,900);
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #888;
+    line-height: 30px;
+    text-align: center;
+	background-color: #101010;
+}
+
+strong { 
+	font-weight: 500; 
+}
+
+h1, h2 {
+	margin-top: 10px;
+	font-size: 38px;
+    font-weight: 100;
+    color: #FF8927;
+    line-height: 50px;
+}
+
+h3 {
+	font-size: 22px;
+    font-weight: 300;
+    color: #FF8927;
+    line-height: 30px;
+}
+
+.form-box {
+	margin-top: 35px;
+
+}
+
+.box {
+	overflow: hidden;
+	padding: 25px 25px 5px 25px;
+	background: rgba(0, 0, 0, 0.35);
+	text-align: center;
+	border-style: solid;
+    border-color: rgba(0, 0, 0, 0.35);
+}
+
+
+.box h3 { 
+	margin-top: 0; 
+	color: #fff; 
+	text-align: center;
+}
+.box p { 
+	opacity: 0.8; 
+	color: #fff;
+	text-align: center;
+}
+
+.box box button.btn {
+	width: 100%;
+}
+
+.navbar-inverse {
+    background-color: rgba(0, 0, 0, 0.35);
+	border-bottom: 1px solid #FF8927;
+}
+
+li.current {
+	/*
+	border-left: 1px solid #FF8927;
+	border-right: 1px solid #FF8927;
+	*/
+	background-color: black;
+}
+
+input { 
+    text-align: center; 
+}
+
+.btn {
+	background-color: rgba(0, 0, 0, 0.35);
+	color: #FF8927;
+	font-size: 20px;
+	border-style: solid;
+	border-color: #FF8927;
+}
