@@ -41,3 +41,5 @@ gabrielM -- 2017-06-03 18:20
     - finished implementing walls client side
     - started multiple games
     
+farhanH -- 2017-06-03 18:40
+    -Finsihed html pages and css pages
