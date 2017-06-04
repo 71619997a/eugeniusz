@@ -15,6 +15,9 @@ class Game(object):  # one game
     def data(self, json):
         ret = {}
         for player in self.players:
+            if player.dead:
+                ret[player.name] = {'dead': True}
+                continue
             if player.name in json['wallnums']:
                 wallIdx = json['wallnums'][player.name] - 1
             else:
@@ -51,6 +54,8 @@ class Game(object):  # one game
             return -1
         return 0
 
+    def killPlayer(self, player):
+        player.dead = True
 
     def runFrame(self):
         horizontals = {}
@@ -58,6 +63,8 @@ class Game(object):  # one game
         # 0. move so that we dont hit just placed walls and
         # 1. build wall dicts
         for player in self.players:
+            if player.dead:
+                continue
             for wall in player.walls:
                 # print wall.ends()
                 wt = (wall.start, wall.end) if wall.start <= wall.end else (wall.end, wall.start)
@@ -81,16 +88,20 @@ class Game(object):  # one game
                 player.x -= PLAYERVEL
         # 2. check collisions and inc wall
         for player in self.players:
+            if player.dead:
+                continue
+            if player.x < 0 or player.x > self.size or player.y < 0 or player.y > self.size:
+                killPlayer(player)
+                continue
             if player.x in verticals:
                 s, e = verticals[player.x]
                 if player.y >= s and player.y <= e:
-                    # insert player death routine
-                    print 'player is dead!'
+                    killPlayer(player)
                     continue
             if player.y in horizontals:
                 s, e = horizontals[player.y]
                 if player.x >= s and player.x <= e:
-                    # insert player death routine
+                    killPlayer(player)
                     print 'player is dead!'
                     continue
             player.walls[-1].inc(PLAYERVEL if player.dir % 3 else -PLAYERVEL)

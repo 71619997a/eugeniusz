@@ -11,6 +11,7 @@ class Player(object):
         self.input = Input()
         self.walls = [Wall(dir, x, y)]
         self.color = ['blu', 'red'][randint(0, 1)]
+        self.dead = False
 
 
 class Input(object):

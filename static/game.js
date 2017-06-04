@@ -80,9 +80,9 @@ function init() {
     // floor
     var floorTexture = new THREE.ImageUtils.loadTexture('static/img/checkerboard.jpg')
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-    floorTexture.repeat.set(10,10);
+    floorTexture.repeat.set(size/100, size/100);
     var floorMaterial = new THREE.MeshBasicMaterial( {map:floorTexture, side: THREE.DoubleSide} )
-    var floorGeometry = new THREE.PlaneGeometry(1000,1000,10,10);
+    var floorGeometry = new THREE.PlaneGeometry(size,size);
     var floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.position.y = -0.5
     floor.rotation.x = Math.PI / 2;
@@ -219,6 +219,10 @@ function dbgWallObjs(name) {
 function update() {
     for(var name in data) {
         player = data[name];
+        if(player.hasOwnProperty('dead')) {
+            model = models[name]
+            for
+        }
         if(!models.hasOwnProperty(name)) { // first time
 	    console.log('Loading model for ' + name);
             loadModel(name, player.color);
