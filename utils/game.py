@@ -5,47 +5,58 @@ from wall import Wall
 from constants import *
 from random import randint
 
-players = []
-def data(json):
-    ret = {}
-    for player in players:
-        if player.name in json['wallnums']:
-            wallIdx = json['wallnums'][player.name] - 1
-        else:
-            wallIdx = 0
-        newWalls = [wall.ends() for wall in player.walls[wallIdx:]]
-        ret[player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'updatedwall': wallIdx, 'nwalls': len(player.walls), 'walls': newWalls}
-    return ret
+class Game(object):  # one game
+    def __init__(self, name, **settings):
+        self.name = name
+        self.players = []
+        self.pdict = {}
 
-def update(json):
-    player = getPlayer(json['username'])
-    if json['event'] == 'keyboard':
-        player.input.key = json['key']
+    def data(self, json):
+        ret = {}
+        for player in self.players:
+            if player.name in json['wallnums']:
+                wallIdx = json['wallnums'][player.name] - 1
+            else:
+                wallIdx = 0
+            newWalls = [wall.ends() for wall in player.walls[wallIdx:]]
+            ret[player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'updatedwall': wallIdx, 'nwalls': len(player.walls), 'walls': newWalls}
+        return ret
 
-def addUser(user):
-    players.append(Player(user, 0, 0, 0))
-    print players
+    def update(self, json):
+        player = self.getPlayer(json['username'])
+        if json['event'] == 'keyboard':
+            player.input.key = json['key']
 
-def getPlayer(name):
-    for player in players:
-        if player.name == name:
-            return player
-        
-def keyDir(key):
-    if key == 'D':
-        return 1
-    if key == 'A':
-        return -1
-    return 0
+    def addUser(self, user):
+        if user in self.pdict:
+            return
+        player = Player(user, 0, 0, 0)
+        self.players.append(player)
+        self.pdict[user] = player
+
+    def removeUser(self, user):
+        player = pdict[user]
+        self.pdict.pop(user, 0)
+        self.players.remove(player)
+        del player
+
+    def getPlayer(self, name):
+        return self.pdict[name]
+            
+    def keyDir(self, key):
+        if key == 'D':
+            return 1
+        if key == 'A':
+            return -1
+        return 0
 
 
-def run():
-    while True:  # multiple passes
+    def runFrame(self):
         horizontals = {}
         verticals = {}
         # 0. move so that we dont hit just placed walls and
         # 1. build wall dicts
-        for player in players:
+        for player in self.players:
             for wall in player.walls:
                 # print wall.ends()
                 wt = (wall.start, wall.end) if wall.start <= wall.end else (wall.end, wall.start)
@@ -54,7 +65,7 @@ def run():
                 else:
                     verticals[wall.const] = wt
             if player.input.key is not None:
-                ndir = keyDir(player.input.key)
+                ndir = self.keyDir(player.input.key)
                 player.dir += ndir
                 player.dir %= 4
                 player.input.key = None
@@ -68,7 +79,7 @@ def run():
             elif player.dir == LEFT:
                 player.x -= PLAYERVEL
         # 2. check collisions and inc wall
-        for player in players:
+        for player in self.players:
             if player.x in verticals:
                 s, e = verticals[player.x]
                 if player.y >= s and player.y <= e:
@@ -83,4 +94,3 @@ def run():
                     continue
             player.walls[-1].inc(PLAYERVEL if player.dir % 3 else -PLAYERVEL)
 
-        eventlet.sleep(1./120)

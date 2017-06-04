@@ -26,7 +26,7 @@ socket.on('connect', function() {
 });
 
 socket.on('getname', function() {
-    socket.emit('givename', {'username': username});
+    socket.emit('givename', {'username': username, 'gamename': gamename});
 });
 
 function sendKey(c) {
