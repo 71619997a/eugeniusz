@@ -1,5 +1,6 @@
 var container;
 
+var walltex = [];
 var down = {'W': false, 'A': false, 'S': false, 'D': false};
 var models = {};
 var camera, scene, renderer, manager, stats;
@@ -86,6 +87,9 @@ function init() {
     floor.position.y = -0.5
     floor.rotation.x = Math.PI / 2;
     scene.add(floor);
+
+    // walls
+    walltex = new THREE.ImageUtils.loadTexture('static/model/walltex.png');
 
     // renderer
     renderer = new THREE.WebGLRenderer();
@@ -188,14 +192,28 @@ function wallColor(col) {
 }
 
 function geomFromWall(wall) {
-    var bg = new THREE.BoxGeometry(wall[1][0] - wall[0][0] + 3, 100, wall[1][1] - wall[0][1] + 3);
+    var bg = new THREE.BoxGeometry(wall[1][0] - wall[0][0] + 3, 25, wall[1][1] - wall[0][1] + 3);
     ox = bg.vertices[0].x;
     oy = bg.vertices[0].y;
     oz = bg.vertices[0].z;
     for(var i = 0; i < 8; i++) {
-	bg.vertices[i].x += ox;
+	   bg.vertices[i].x += ox;
+       bg.vertices[i].y += oy;
+       bg.vertices[i].z += oz;
     }
+    bg.verticesNeedUpdate = true;
     return bg;
+}
+
+function dbgWallObjs(name) {
+    model = models[name];
+    for(var i = 0; i < Math.min(model.walls.length, model.wallobjs.length); i++) {
+        console.log(i);
+        console.log(model.walls[i]);
+        console.log(model.wallobjs[i].position)
+        console.log(model.wallobjs[i].geometry.vertices[0]);
+        console.log(model.wallobjs[i].geometry.vertices[6]);
+    }
 }
 
 function update() {
@@ -209,14 +227,14 @@ function update() {
             model.walls = player.walls;
 	    model.wallobjs = [];
 	    model.color = player.color;
-	    model.wallmat = new THREE.MeshBasicMaterial({color: wallColor(model.color)});
+	    model.wallmat = new THREE.MeshBasicMaterial({color: wallColor(model.color), map: walltex});
 	    outdata['wallnums'][name] = model.walls.length;
             // render every wall
 	    for (wall of model.walls) {
 		geom = geomFromWall(wall);
 		box = new THREE.Mesh(geom, model.wallmat);
 		box.position.x = wall[0][0];
-		box.position.y = 100;
+		box.position.y = 0;
 		box.position.z = wall[0][1];
 		scene.add(box);
 		model.wallobjs.push(box);
@@ -224,25 +242,35 @@ function update() {
         }
         else {
             model = models[name];
-            if(player.hasOwnProperty('walls') && player.nwalls !== model.walls.length) {
+            if(player.hasOwnProperty('walls')) {
 		if (player.updatedwall === model.walls.length - 1) {
+            console.log("updating latest wall");
 		    model.walls[player.updatedwall] = player.walls[0];
-		    model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[0];
+		    model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[0]);
 		}
 		else {
+            console.log("searching for correct wall to update");
 		    start = model.walls[model.walls.length - 1][0];
 		    var idx = 0;
 		    while(idx < player.walls.length) {
 			if (player.walls[idx][0] === start) {
 			    model.walls[model.walls.length - 1] = player.walls[idx];
 			    model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[idx]);
-			}
+			    console.log("wall found");
+                break;
+            }
+            idx++;
 		    }
 		}
 		var l = model.walls.length;
                 model.walls = model.walls.concat(player.walls.slice(player.walls.length+model.walls.length-player.nwalls));
 		for (; l < model.walls.length; l++) {
-		    model.wallobjs[l] = geomFromWall(model.walls[l]);
+            wall = model.walls[l]
+		    model.wallobjs[l] = new THREE.Mesh(geomFromWall(wall), model.wallmat);
+            model.wallobjs[l].position.x = wall[0][0];
+            model.wallobjs[l].position.y = 0;
+            model.wallobjs[l].position.z = wall[0][1];
+            scene.add(model.wallobjs[l]);
 		}
 		outdata['wallnums'][name] = model.walls.length;
                 // render new walls
@@ -254,7 +282,8 @@ function update() {
         model.obj.position.z = player.y;
         model.obj.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;
         if(name === username) {
-            var cameraOffset = new THREE.Vector3(50,50,200);
+            // Camera 1: behind 
+            var cameraOffset = new THREE.Vector3(50,150,200);
             var axis = new THREE.Vector3(0,1,0);
             var angle = model.obj.rotation.y - Math.PI;
             cameraOffset.applyAxisAngle(axis,angle);
@@ -264,6 +293,10 @@ function update() {
             camera.position.y = newPos.y;
             camera.position.z = newPos.z;
             //console.log("camera: ", camera.position, "\nmodel: ", model.position);
+            // Camera 2: constant topdown (for dbg)
+            // camera.position = model.obj.position.clone();
+            //camera.position.y = 400;
+
             camera.lookAt( model.obj.position );
         }
     }
