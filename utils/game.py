@@ -10,6 +10,7 @@ class Game(object):  # one game
         self.name = name
         self.players = []
         self.pdict = {}
+        self.settings = settings
 
     def data(self, json):
         ret = {}

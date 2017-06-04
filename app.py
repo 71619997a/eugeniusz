@@ -62,7 +62,8 @@ def play():
     gamename = request.args.get('name')
     if "user" not in session:
         return redirect(url_for('login'))
-    return render_template('index.html', username=session['user'], gamename=gamename)
+    settings = gm.getGame(gamename).settings
+    return render_template('index.html', username=session['user'], gamename=gamename, settings=settings)
 
 @socketio.on('getdata')
 def givedata(json):
@@ -92,7 +93,7 @@ if __name__ == '__main__':
         db.close()
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # no buffer
     print 'Starting game thread'
-    gm.createGame('game1')
+    gm.createGame('game1', size=2000)
     thread.start_new_thread(gm.run, ())
     print 'Started game thread'
     app.debug = True
@@ -108,5 +109,3 @@ if __name__ == '__main__':
     # print 'getdata done'
 
     socketio.run(app, host='0.0.0.0')
-
-

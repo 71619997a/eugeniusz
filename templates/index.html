@@ -13,7 +13,13 @@
     </style>
 </head>
 <body>
-    <script>username = "{{ username }}"; gamename = "{{ gamename }}";</script>
+    <script>
+        username = "{{ username }}";
+        gamename = "{{ gamename }}";
+        {% for key, val in settings.items() %}
+            {{ key }} = "{{ val }}";
+        {% endfor %}
+    </script>
     <script src="static/game.js"></script>
 </body>
 </html>

@@ -36,4 +36,8 @@ gabrielM -- 2017-06-01 22:15
     
 nobelG & farhanH -- 2017-06-01 14:43
     -Error message on login.html
+
+gabrielM -- 2017-06-03 18:20
+    - finished implementing walls client side
+    - started multiple games
     
