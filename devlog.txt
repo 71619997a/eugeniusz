@@ -40,4 +40,9 @@ nobelG & farhanH -- 2017-06-01 14:43
 gabrielM -- 2017-06-03 18:20
     - finished implementing walls client side
     - started multiple games
-    
+
+gabrielM -- 2017-06-04 16:30
+    - continued with multiple games
+    - started player death
+    - distinct coloring
+    - distinct spawn points
