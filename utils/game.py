@@ -14,11 +14,13 @@ class Game(object):  # one game
         settings['maxplayers'] = min(settings['maxplayers'], 4)
         self.size = settings['size']
         self.maxplayers = settings['maxplayers']
+        self.speed = settings['speed']
 
     def data(self, json):
         ret = {}
         for player in self.players:
             if player.dead:
+                print player.name, 'dead'
                 ret[player.name] = {'dead': True}
                 continue
             if player.name in json['wallnums']:
@@ -61,7 +63,8 @@ class Game(object):  # one game
             return
         pidx = len(self.players)
         x, y, dir = self.spawnP(pidx)
-        player = Player(user, x, y, dir, PCOLORS[pidx])
+        player = Player(user, x/self.speed*self.speed, y/self.speed*self.speed, dir, PCOLORS[pidx])
+        print player.x, player.y
         self.players.append(player)
         self.pdict[user] = player
 
@@ -106,13 +109,14 @@ class Game(object):  # one game
                 player.input.key = None
                 player.walls.append(Wall(player.dir, player.x, player.y))
             if player.dir == UP:
-                player.y -= PLAYERVEL
+                player.y -= self.speed
             elif player.dir == RIGHT:
-                player.x += PLAYERVEL
+                player.x += self.speed
             elif player.dir == DOWN:
-                player.y += PLAYERVEL
+                player.y += self.speed
             elif player.dir == LEFT:
-                player.x -= PLAYERVEL
+                player.x -= self.speed
+            print player.x, player.y
         # 2. check collisions and inc wall
         for player in self.players:
             if player.dead:
@@ -131,5 +135,5 @@ class Game(object):  # one game
                     self.killPlayer(player)
                     print 'player is dead!'
                     continue
-            player.walls[-1].inc(PLAYERVEL if player.dir % 3 else -PLAYERVEL)
+            player.walls[-1].inc(self.speed if player.dir % 3 else -self.speed)
 

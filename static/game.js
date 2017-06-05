@@ -8,7 +8,7 @@ var data = {};
 var newData = {};
 var outdata = {'username': username, 'wallnums': {}}
 var mouseX = 0, mouseY = 0, loaded = false, color = 'blu';
-
+var fov = 50;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
@@ -55,7 +55,7 @@ function init() {
     container = document.createElement( 'div' );
     document.body.appendChild( container );
 
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+    camera = new THREE.PerspectiveCamera( fov, window.innerWidth / window.innerHeight, 1, 2000 );
     camera.position.z = 250;
 
     // scene
@@ -85,6 +85,8 @@ function init() {
     var floorGeometry = new THREE.PlaneGeometry(size,size);
     var floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.position.y = -0.5
+    floor.position.x = size / 2;
+    floor.position.z = size / 2;
     floor.rotation.x = Math.PI / 2;
     scene.add(floor);
 
@@ -222,10 +224,29 @@ function dbgWallObjs(name) {
 
 function update() {
     for(var name in data) {
+        if(!data.hasOwnProperty(name))
+            continue;
         player = data[name];
         if(player.hasOwnProperty('dead')) {
-            model = models[name]
-            //for
+            if(models.hasOwnProperty(name)) {  // delete model and walls
+                model = models[name]
+                delete models[name];
+                scene.remove(model);
+                for(obj of model.wallobjs) {
+                    scene.remove(obj);
+                }
+                delete model;
+                if(name !== username)
+                    continue;
+                // spectate mode
+                ratio = 1 / Math.tan(fov / 360 * Math.PI)  // A / O
+                camera.position.y = ratio * (size * 11 / 10) / 2;
+                camera.position.x = size / 2;
+                camera.position.z = size / 2;
+                console.log(camera.position);
+                camera.lookAt(new THREE.Vector3(size / 2, 0, size / 2));
+            }
+            continue;
         }
         if(!models.hasOwnProperty(name)) { // first time
 	    console.log('Loading model for ' + name);
