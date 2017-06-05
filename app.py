@@ -45,7 +45,7 @@ def auth(user,pw):
     if s == True:
         session["user"] = user
         print 'Done login'
-        return redirect(url_for("play"))
+        return redirect(url_for("play", name='game1'))
     return redirect(url_for("login", var="Login failed"))
 
 def reg(user,pw):
