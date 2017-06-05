@@ -55,6 +55,11 @@ def reg(user,pw):
         return redirect(url_for("server"))
     return redirect(url_for("login", var=m))
 
+@app.route('/logout')
+def onlogout():
+    session.pop('user')
+    return redirect(url_for('home'))
+
 @app.route('/game')
 def play():
     gamename = request.args.get('name')
