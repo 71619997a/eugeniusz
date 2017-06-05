@@ -45,14 +45,14 @@ def auth(user,pw):
     if s == True:
         session["user"] = user
         print 'Done login'
-        return redirect(url_for("play", name='game1'))
+        return redirect(url_for("server"))
     return redirect(url_for("login", var="Login failed"))
 
 def reg(user,pw):
     s,m = u.register(user, pw)
     if s == True:
         session["user"] = user
-        return redirect(url_for("play", name='game1'))
+        return redirect(url_for("server"))
     return redirect(url_for("login", var=m))
 
 @app.route('/game')
@@ -62,6 +62,25 @@ def play():
         return redirect(url_for('login'))
     settings = gm.getGame(gamename).settings
     return render_template('index.html', username=session['user'], gamename=gamename, settings=settings)
+
+@app.route('/servers')
+def server():
+    return render_template('server.html')
+
+@app.route('/create', methods=['GET', 'POST'])
+def create():
+    if request.method == 'POST':
+        name = request.form['servername']
+        players = request.form['numPlayers']
+        if players < 2 or players > 4:
+            return render_template('create.html')
+        speed = request.form['playerspeed']
+        size = request.form['size']
+        if size < 2000 or size > 20000:
+            return render_template('create.html')
+        gm.createGame(name, size=2000, maxplayers=players, speed=speed)
+    return render_template('create.html')
+
 
 @socketio.on('getdata')
 def givedata(json):

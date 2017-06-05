@@ -30,24 +30,24 @@ socket.on('getname', function() {
 });
 
 function sendKey(c) {
-        socket.emit('sendinput', {username: username, key: c, event: 'keyboard'});
+    socket.emit('sendinput', {username: username, key: c, event: 'keyboard'});
 }
 
 function keyDown(e) {
     c = String.fromCharCode(e.keyCode);
     if(c == "A" || c == "S" || c == "W" || c == "D") {
-	if(down[c]) return;
-	else {
-	    down[c] = true;
-	    return sendKey(c);
-	}
+        if(down[c]) return;
+        else {
+            down[c] = true;
+            return sendKey(c);
+        }
     }
 }
 
 function keyUp(e) {
     c = String.fromCharCode(e.keyCode);
     if(c == "A" || c == "S" || c == "W" || c == "D")
-	down[c] = false;
+        down[c] = false;
 }
 
 function init() {
@@ -78,13 +78,13 @@ function init() {
 
 
     // floor
-    var floorTexture = new THREE.ImageUtils.loadTexture('static/img/checkerboard.jpg')
+    var floorTexture = new THREE.ImageUtils.loadTexture('static/img/checkerboard.jpg');
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(size/100, size/100);
     var floorMaterial = new THREE.MeshBasicMaterial( {map:floorTexture, side: THREE.DoubleSide} )
-    var floorGeometry = new THREE.PlaneGeometry(size,size);
+        var floorGeometry = new THREE.PlaneGeometry(size,size);
     var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.position.y = -0.5
+    floor.position.y = -0.5;
     floor.position.x = size / 2;
     floor.position.z = size / 2;
     floor.rotation.x = Math.PI / 2;
@@ -187,9 +187,9 @@ function animate() {
 
 function wallColor(col) {
     if(col === 'blu')
-	   return 0x2609FF;
+        return 0x2609FF;
     if(col === 'org')
-	   return 0xFF6709;
+        return 0xFF6709;
     if(col === 'grn')
         return 0x01DE53;
     if(col === 'red')
@@ -203,9 +203,9 @@ function geomFromWall(wall) {
     oy = bg.vertices[0].y;
     oz = bg.vertices[0].z;
     for(var i = 0; i < 8; i++) {
-	   bg.vertices[i].x += ox;
-       bg.vertices[i].y += oy;
-       bg.vertices[i].z += oz;
+        bg.vertices[i].x += ox;
+        bg.vertices[i].y += oy;
+        bg.vertices[i].z += oz;
     }
     bg.verticesNeedUpdate = true;
     return bg;
@@ -216,7 +216,7 @@ function dbgWallObjs(name) {
     for(var i = 0; i < Math.min(model.walls.length, model.wallobjs.length); i++) {
         console.log(i);
         console.log(model.walls[i]);
-        console.log(model.wallobjs[i].position)
+        console.log(model.wallobjs[i].position);
         console.log(model.wallobjs[i].geometry.vertices[0]);
         console.log(model.wallobjs[i].geometry.vertices[6]);
     }
@@ -229,7 +229,8 @@ function update() {
         player = data[name];
         if(player.hasOwnProperty('dead')) {
             if(models.hasOwnProperty(name)) {  // delete model and walls
-                model = models[name]
+                console.log("Running dying code");
+                model = models[name];
                 delete models[name];
                 scene.remove(model);
                 for(obj of model.wallobjs) {
@@ -239,7 +240,8 @@ function update() {
                 if(name !== username)
                     continue;
                 // spectate mode
-                ratio = 1 / Math.tan(fov / 360 * Math.PI)  // A / O
+
+                ratio = 1 / Math.tan(fov / 360 * Math.PI);  // A / O
                 camera.position.y = ratio * (size * 11 / 10) / 2;
                 camera.position.x = size / 2;
                 camera.position.z = size / 2;
@@ -249,64 +251,64 @@ function update() {
             continue;
         }
         if(!models.hasOwnProperty(name)) { // first time
-	    console.log('Loading model for ' + name);
+            console.log('Loading model for ' + name);
             loadModel(name, player.color);
-	    console.log('Finished loadModel call, creating model.walls');
+            console.log('Finished loadModel call, creating model.walls');
             model = models[name];
             model.walls = player.walls;
-	    model.wallobjs = [];
-	    model.color = player.color;
-	    model.wallmat = new THREE.MeshBasicMaterial({color: wallColor(model.color), map: walltex});
-	    outdata['wallnums'][name] = model.walls.length;
+            model.wallobjs = [];
+            model.color = player.color;
+            model.wallmat = new THREE.MeshBasicMaterial({color: wallColor(model.color), map: walltex});
+            outdata['wallnums'][name] = model.walls.length;
             // render every wall
-	    for (wall of model.walls) {
-		geom = geomFromWall(wall);
-		box = new THREE.Mesh(geom, model.wallmat);
-		box.position.x = wall[0][0];
-		box.position.y = 0;
-		box.position.z = wall[0][1];
-		scene.add(box);
-		model.wallobjs.push(box);
-	    }
+            for (wall of model.walls) {
+                geom = geomFromWall(wall);
+                box = new THREE.Mesh(geom, model.wallmat);
+                box.position.x = wall[0][0];
+                box.position.y = 0;
+                box.position.z = wall[0][1];
+                scene.add(box);
+                model.wallobjs.push(box);
+            }
         }
         else {
             model = models[name];
             if(player.hasOwnProperty('walls')) {
-		if (player.updatedwall === model.walls.length - 1) {
-            console.log("updating latest wall");
-		    model.walls[player.updatedwall] = player.walls[0];
-		    model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[0]);
-		}
-		else {
-            console.log("searching for correct wall to update");
-		    start = model.walls[model.walls.length - 1][0];
-		    var idx = 0;
-		    while(idx < player.walls.length) {
-			if (player.walls[idx][0] === start) {
-			    model.walls[model.walls.length - 1] = player.walls[idx];
-			    model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[idx]);
-			    console.log("wall found");
-                break;
-            }
-            idx++;
-		    }
-		}
-		var l = model.walls.length;
+                if (player.updatedwall === model.walls.length - 1) {
+                    console.log("updating latest wall");
+                    model.walls[player.updatedwall] = player.walls[0];
+                    model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[0]);
+                }
+                else {
+                    console.log("searching for correct wall to update");
+                    start = model.walls[model.walls.length - 1][0];
+                    var idx = 0;
+                    while(idx < player.walls.length) {
+                        if (player.walls[idx][0] === start) {
+                            model.walls[model.walls.length - 1] = player.walls[idx];
+                            model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[idx]);
+                            console.log("wall found");
+                            break;
+                        }
+                        idx++;
+                    }
+                }
+                var l = model.walls.length;
                 model.walls = model.walls.concat(player.walls.slice(player.walls.length+model.walls.length-player.nwalls));
-		for (; l < model.walls.length; l++) {
-            wall = model.walls[l]
-		    model.wallobjs[l] = new THREE.Mesh(geomFromWall(wall), model.wallmat);
-            model.wallobjs[l].position.x = wall[0][0];
-            model.wallobjs[l].position.y = 0;
-            model.wallobjs[l].position.z = wall[0][1];
-            scene.add(model.wallobjs[l]);
-		}
-		outdata['wallnums'][name] = model.walls.length;
+                for (; l < model.walls.length; l++) {
+                    wall = model.walls[l];
+                    model.wallobjs[l] = new THREE.Mesh(geomFromWall(wall), model.wallmat);
+                    model.wallobjs[l].position.x = wall[0][0];
+                    model.wallobjs[l].position.y = 0;
+                    model.wallobjs[l].position.z = wall[0][1];
+                    scene.add(model.wallobjs[l]);
+                }
+                outdata['wallnums'][name] = model.walls.length;
                 // render new walls
-	    }
+            }
             // rerender updated wall
         }
-        model = models[name]
+        model = models[name];
         model.obj.position.x = player.x;
         model.obj.position.z = player.y;
         model.obj.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;

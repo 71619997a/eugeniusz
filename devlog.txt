@@ -49,3 +49,8 @@ gabrielM -- 2017-06-04 16:30
     - started player death
     - distinct coloring
     - distinct spawn points
+
+nobelG -- 2017-06-05 02:00
+    - Display server menu when logging in
+    - Backend for server creation
+    - Note: Server menu not complete
