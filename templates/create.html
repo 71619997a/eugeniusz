@@ -72,9 +72,47 @@ button:create
 						<!--Num Player Box-->
 						<div class="box">
 							<h3>Number of Players</h3>
-							<input type="text" class="form-control" name="numplayers">
-							<br>
+							<!--Slider output display taken from https://stackoverflow.com/questions/10004723/html5-input-type-range-show-range-value-->
+							<input type="range" name="numplayers" min="2" max="4" onchange="updatePlayerInput(this.value);">
+							<input type="text" id="playerInput" value="">
 						</div>
+
+						<br>
+						<!--Speed Box-->
+						<div class="box">
+							<h3>User Velocity</h3>
+							<input type="range" name="playerspeed" min="2" max="10" onchange="updateSpeedInput(this.value);">
+							<input type="text" id="speedInput" value="">
+						</div>
+
+						<br>
+						<!--Dimension Box-->
+						<div class="box">
+							<h3>Field Size</h3>
+							<input type="range" name="length" min="1000" max="20000" step="1000" onchange="updateLengthInput(this.value);">
+							<input type="text" id="lengthInput" value="">
+							<p>x</p>
+							<input type="range" name="width" min="1000" max="20000" step="1000" onchange="updateWidthInput(this.value);">
+							<input type="text" id="widthInput" value="">
+						</div>							
+						
+						<script>
+						function updatePlayerInput(val) {
+							document.getElementById('playerInput').value=val; 
+						}
+						
+						function updateSpeedInput(val) {
+							document.getElementById('speedInput').value=val; 
+						}
+						
+						function updateLengthInput(val) {
+							document.getElementById('lengthInput').value=val; 
+						}
+						
+						function updateWidthInput(val) {
+							document.getElementById('widthInput').value=val; 
+						}
+						</script>
 						
 						<br>
 						<button type="submit" name="serversubmit" value=":(" class="btn btn-login">Submit</button>

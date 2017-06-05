@@ -83,3 +83,7 @@ input {
 	border-style: solid;
 	border-color: #FF8927;
 }
+
+#ex1Slider .slider-selection {
+	background: #BABABA;
+}
