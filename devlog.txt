@@ -54,3 +54,6 @@ nobelG -- 2017-06-05 02:00
     - Display server menu when logging in
     - Backend for server creation
     - Note: Server menu not complete
+
+farhanH -- 2017-06-04 18:30
+    -Modified create.html
