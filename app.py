@@ -17,8 +17,6 @@ socketio = SocketIO(app)
 
 @app.route('/')
 def home():
-    if "user" in session:
-        return redirect(url_for('play'))
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -93,7 +91,7 @@ if __name__ == '__main__':
         db.close()
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # no buffer
     print 'Starting game thread'
-    gm.createGame('game1', size=2000, maxplayers=4)
+    gm.createGame('game1', size=2000, maxplayers=4, speed=5)
     thread.start_new_thread(gm.run, ())
     print 'Started game thread'
     app.debug = True
