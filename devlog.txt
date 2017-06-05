@@ -43,3 +43,9 @@ gabrielM -- 2017-06-03 18:20
     
 farhanH -- 2017-06-03 18:40
     -Finsihed html pages and css pages
+
+gabrielM -- 2017-06-04 16:30
+    - continued with multiple games
+    - started player death
+    - distinct coloring
+    - distinct spawn points
