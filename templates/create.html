@@ -74,7 +74,7 @@ button:create
 							<h3>Number of Players</h3>
 							<!--Slider output display taken from https://stackoverflow.com/questions/10004723/html5-input-type-range-show-range-value-->
 							<input type="range" name="numplayers" min="2" max="4" onchange="updatePlayerInput(this.value);">
-							<input type="text" id="playerInput" value="">
+							<input type="text" class="form-control" id="playerInput" value="">
 						</div>
 
 						<br>
@@ -82,18 +82,18 @@ button:create
 						<div class="box">
 							<h3>User Velocity</h3>
 							<input type="range" name="playerspeed" min="2" max="10" onchange="updateSpeedInput(this.value);">
-							<input type="text" id="speedInput" value="">
+							<input type="text" class="form-control" id="speedInput" value="">
 						</div>
 
 						<br>
 						<!--Dimension Box-->
 						<div class="box">
 							<h3>Field Size</h3>
-							<input type="range" name="length" min="1000" max="20000" step="1000" onchange="updateLengthInput(this.value);">
-							<input type="text" id="lengthInput" value="">
-							<p>x</p>
-							<input type="range" name="width" min="1000" max="20000" step="1000" onchange="updateWidthInput(this.value);">
-							<input type="text" id="widthInput" value="">
+							<input type="range" name="length" min="2000" max="20000" step="1000" onchange="updateLengthInput(this.value);">
+							<input type="text" class="form-control" id="lengthInput" value="">
+							<p>X</p>
+							<input type="range" name="width" min="2000" max="20000" step="1000" onchange="updateWidthInput(this.value);">
+							<input type="text" class="form-control" id="widthInput" value="">
 						</div>							
 						
 						<script>
