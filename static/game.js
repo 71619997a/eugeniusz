@@ -185,9 +185,13 @@ function animate() {
 
 function wallColor(col) {
     if(col === 'blu')
-	return 0x0030D0;
+	   return 0x2609FF;
+    if(col === 'org')
+	   return 0xFF6709;
+    if(col === 'grn')
+        return 0x01DE53;
     if(col === 'red')
-	return 0xD07010;
+        return 0xEE2724;
     return 0;
 }
 
@@ -221,7 +225,7 @@ function update() {
         player = data[name];
         if(player.hasOwnProperty('dead')) {
             model = models[name]
-            for
+            //for
         }
         if(!models.hasOwnProperty(name)) { // first time
 	    console.log('Loading model for ' + name);

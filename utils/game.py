@@ -11,6 +11,9 @@ class Game(object):  # one game
         self.players = []
         self.pdict = {}
         self.settings = settings
+        settings['maxplayers'] = min(settings['maxplayers'], 4)
+        self.size = settings['size']
+        self.maxplayers = settings['maxplayers']
 
     def data(self, json):
         ret = {}
@@ -31,10 +34,34 @@ class Game(object):  # one game
         if json['event'] == 'keyboard':
             player.input.key = json['key']
 
+    def spawnP(self, i):
+        dir = i
+        c = 100
+        m = self.size / 2
+        f = self.size - c
+        if i == 0:  # sometimes hardcoding is best
+            x = m
+            y = f
+        elif i == 1:
+            x = c
+            y = m
+        elif i == 2:
+            x = m
+            y = c
+        elif i == 3:
+            x = f
+            y = m
+        return x, y, dir
+
     def addUser(self, user):
+        if len(self.players) >= self.maxplayers:
+            # send player back to server browser page
+            return
         if user in self.pdict:
             return
-        player = Player(user, 0, 0, 0)
+        pidx = len(self.players)
+        x, y, dir = self.spawnP(pidx)
+        player = Player(user, x, y, dir, PCOLORS[pidx])
         self.players.append(player)
         self.pdict[user] = player
 
@@ -91,17 +118,17 @@ class Game(object):  # one game
             if player.dead:
                 continue
             if player.x < 0 or player.x > self.size or player.y < 0 or player.y > self.size:
-                killPlayer(player)
+                self.killPlayer(player)
                 continue
             if player.x in verticals:
                 s, e = verticals[player.x]
                 if player.y >= s and player.y <= e:
-                    killPlayer(player)
+                    self.killPlayer(player)
                     continue
             if player.y in horizontals:
                 s, e = horizontals[player.y]
                 if player.x >= s and player.x <= e:
-                    killPlayer(player)
+                    self.killPlayer(player)
                     print 'player is dead!'
                     continue
             player.walls[-1].inc(PLAYERVEL if player.dir % 3 else -PLAYERVEL)

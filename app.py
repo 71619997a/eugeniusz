@@ -93,7 +93,7 @@ if __name__ == '__main__':
         db.close()
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # no buffer
     print 'Starting game thread'
-    gm.createGame('game1', size=2000)
+    gm.createGame('game1', size=2000, maxplayers=4)
     thread.start_new_thread(gm.run, ())
     print 'Started game thread'
     app.debug = True
