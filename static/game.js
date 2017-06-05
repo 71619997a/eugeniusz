@@ -55,7 +55,7 @@ function init() {
     container = document.createElement( 'div' );
     document.body.appendChild( container );
 
-    camera = new THREE.PerspectiveCamera( fov, window.innerWidth / window.innerHeight, 1, 2000 );
+    camera = new THREE.PerspectiveCamera( fov, window.innerWidth / window.innerHeight, 1, 2000000 );
     camera.position.z = 250;
 
     // scene
@@ -232,7 +232,7 @@ function update() {
                 console.log("Running dying code");
                 model = models[name];
                 delete models[name];
-                scene.remove(model);
+                scene.remove(model.obj);
                 for(obj of model.wallobjs) {
                     scene.remove(obj);
                 }
@@ -240,13 +240,15 @@ function update() {
                 if(name !== username)
                     continue;
                 // spectate mode
-
+                console.log('name === username');
                 ratio = 1 / Math.tan(fov / 360 * Math.PI);  // A / O
                 camera.position.y = ratio * (size * 11 / 10) / 2;
+                //camera.position.y = 60;
                 camera.position.x = size / 2;
                 camera.position.z = size / 2;
                 console.log(camera.position);
-                camera.lookAt(new THREE.Vector3(size / 2, 0, size / 2));
+                camera.lookAt(new THREE.Vector3(size / 2, 40, size / 2));
+                //camera.lookAt(new THREE.Vector3(0,0,0));
             }
             continue;
         }
