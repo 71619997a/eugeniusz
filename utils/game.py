@@ -15,7 +15,7 @@ class Game(object):  # one game
         self.size = settings['size']
         self.maxplayers = settings['maxplayers']
         self.speed = settings['speed']
-        self.timeout = 600  # 5 second timeout before game start
+        self.timeout = 300  # 5 second timeout before game start
         self.roundEnding = False
         self.gameEnding = False
         self.gameEndsSoon = False
