@@ -57,7 +57,7 @@ def reg(user,pw):
         return redirect(url_for("server"))
     return redirect(url_for("login", var=m))
 
-@app.route('/logout')
+@app.route('/logout/')
 def onlogout():
     session.pop('user')
     return redirect(url_for('home'))
@@ -77,6 +77,10 @@ def play():
 @app.route('/servers/')
 def server():
     return render_template('server.html', gamelist=gm.games)
+	
+@app.route('/user/')
+def user():
+	return render_template('user.html')
 
 @app.route('/create/', methods=['GET', 'POST'])
 def create():
