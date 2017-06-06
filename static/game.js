@@ -93,7 +93,7 @@ function init() {
 
 
     // floor
-    var floorTexture = new THREE.ImageUtils.loadTexture('static/img/checkerboard.jpg');
+    var floorTexture = new THREE.ImageUtils.loadTexture('/static/img/checkerboard.jpg');
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(size/100, size/100);
     var floorMaterial = new THREE.MeshBasicMaterial( {map:floorTexture, side: THREE.DoubleSide} )
@@ -106,7 +106,7 @@ function init() {
     scene.add(floor);
 
     // walls
-    walltex = new THREE.ImageUtils.loadTexture('static/model/walltex.png');
+    walltex = new THREE.ImageUtils.loadTexture('/static/model/walltex.png');
 
     // renderer
     renderer = new THREE.WebGLRenderer();
@@ -143,12 +143,12 @@ function loadModel(name, color, f) {
     models[name] = {}
     models[name].loaded = false;
     var mtlloader = new THREE.MTLLoader(manager);
-    mtlloader.setPath('static/model/');
+    mtlloader.setPath('/static/model/');
     mtlloader.load('SLC_' + color + '.mtl', function(materials) {
         materials.preload();
         var objloader = new THREE.OBJLoader( manager );
         objloader.setMaterials(materials);
-        objloader.setPath('static/model/');
+        objloader.setPath('/static/model/');
         objloader.load( 'SLC.obj', function ( object ) {
             models[name].obj = object;
             models[name].loaded = true;
