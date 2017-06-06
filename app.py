@@ -91,7 +91,7 @@ def create():
             return render_template('create.html', err="invalid player size")
         speed = int(request.form['playerspeed'])
         size = int(request.form['size'])
-        if size < 1000 or size > 20000:
+        if size < 1000 or size > 10000:
             return render_template('create.html')
         gm.createGame(name, size=size, maxplayers=players, speed=speed)
         return render_template("index.html", username=session['user'], gamename=name, settings=gm.getGame(name).settings)
