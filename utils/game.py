@@ -185,7 +185,7 @@ class Game(object):  # one game
                     continue
             for p2 in self.players:
                 if not p2.dead:
-                    if p2.x == player.x and p2.y == player.y:
+                    if p2.x == player.x and p2.y == player.y and p2.name != player.name:
                         self.killPlayer(player)
                         self.killPlayer(p2)
                         continue

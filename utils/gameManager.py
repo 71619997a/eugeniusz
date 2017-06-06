@@ -49,6 +49,7 @@ def run():
         while i < l:
             game = games[i]
             if not game.starting:
+                i += 1
                 continue
             game.runFrame()
             if game.gameEnding:
