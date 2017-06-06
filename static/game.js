@@ -11,14 +11,16 @@ var mouseX = 0, mouseY = 0, loaded = false, color = 'blu';
 var fov = 50;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
-
-var socket = io.connect('http://' + document.domain + ':' + location.port);
+var sinceLast = 0;
+var baseurl = 'http://' + document.domain + ':' + location.port
+var socket = io.connect(baseurl);
 socket.emit('getdata', outdata);
 socket.emit('sendinput', {username: username, event: 'none'});
 
 socket.on('data', function(dat) {
     //console.log("got data");
     newData = dat;
+    sinceLast = 0;
 });
 
 socket.on('connect', function() {
@@ -183,6 +185,13 @@ function animate() {
     if(newData !== {})
         update();
     socket.emit('getdata', outdata);
+    sinceLast++;
+    if(sinceLast == 180) {  // three sec?
+        console.log('Possible disconnect, waiting 10 seconds until leaving...')
+    }
+    if(sinceLast == 780) {  // thirteen sec?
+        window.location.replace(baseurl);
+    }
 }
 
 function wallColor(col) {
