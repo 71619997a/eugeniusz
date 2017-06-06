@@ -108,6 +108,15 @@ function init() {
     stats.domElement.style.zIndex = 100;
     container.appendChild( stats.domElement );
 
+    scoreboard = document.createElement('p');
+    scoreboard.style.position = 'absolute';
+    scoreboard.style.top = '0';
+    scoreboard.style.right = '0';
+    scoreboard.style.border = '5px solid grey';
+    scoreboard.style.background = 'white';
+    scoreboard.style.width = '100px';
+    document.body.appendChild(scoreboard);
+
     // document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
     window.addEventListener('keydown', keyDown, false);
@@ -231,6 +240,10 @@ function dbgWallObjs(name) {
     }
 }
 
+function toCSSColor(col) {
+    return '#' + ('00000' + col.toString(16)).slice(-6);  // slice is to prepend zeros
+}
+
 function update() {
     for(var name in data) {
         if(!data.hasOwnProperty(name))
@@ -270,6 +283,16 @@ function update() {
             model.wallobjs = [];
             model.color = player.color;
             model.wallmat = new THREE.MeshBasicMaterial({color: wallColor(model.color), map: walltex});
+            if(!scoreboard.hasOwnProperty(name)) {
+                scoreboard[name] = document.createElement('p');
+                scoreboard[name].style.color = toCSSColor(wallColor(model.color));
+                scoreboard[name].style.fontWeight = "bold";
+                scoreboard[name].style.fontSize = "48px";
+                scoreboard[name].style.fontFamily = "sans-serif";
+                scoreboard[name].style.textAlign = "center";
+                scoreboard[name].innerHTML = player.score;
+                scoreboard.appendChild(scoreboard[name]);
+            }
             outdata['wallnums'][name] = model.walls.length;
             // render every wall
             for (wall of model.walls) {
@@ -285,40 +308,41 @@ function update() {
         else {
             model = models[name];
             if(player.hasOwnProperty('walls')) {
-                if (player.updatedwall === model.walls.length - 1) {
-                    console.log("updating latest wall");
-                    model.walls[player.updatedwall] = player.walls[0];
-                    model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[0]);
-                }
-                else {
-                    console.log("searching for correct wall to update");
-                    start = model.walls[model.walls.length - 1][0];
-                    var idx = 0;
-                    while(idx < player.walls.length) {
-                        if (player.walls[idx][0] === start) {
-                            model.walls[model.walls.length - 1] = player.walls[idx];
-                            model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[idx]);
-                            console.log("wall found");
-                            break;
+                if(player.nwalls !== 0) {
+                    if (player.updatedwall === model.walls.length - 1) {
+                        console.log("updating latest wall");
+                        model.walls[player.updatedwall] = player.walls[0];
+                        model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[0]);
+                    }
+                    else {
+                        console.log("searching for correct wall to update");
+                        start = model.walls[model.walls.length - 1][0];
+                        var idx = 0;
+                        while(idx < player.walls.length) {
+                            if (player.walls[idx][0] === start) {
+                                model.walls[model.walls.length - 1] = player.walls[idx];
+                                model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[idx]);
+                                console.log("wall found");
+                                break;
+                            }
+                            idx++;
                         }
-                        idx++;
+                    }
+                    var l = model.walls.length;
+                    model.walls = model.walls.concat(player.walls.slice(player.walls.length+model.walls.length-player.nwalls));
+                    for (; l < model.walls.length; l++) {
+                        wall = model.walls[l];
+                        model.wallobjs[l] = new THREE.Mesh(geomFromWall(wall), model.wallmat);
+                        model.wallobjs[l].position.x = wall[0][0];
+                        model.wallobjs[l].position.y = 0;
+                        model.wallobjs[l].position.z = wall[0][1];
+                        scene.add(model.wallobjs[l]);
                     }
                 }
-                var l = model.walls.length;
-                model.walls = model.walls.concat(player.walls.slice(player.walls.length+model.walls.length-player.nwalls));
-                for (; l < model.walls.length; l++) {
-                    wall = model.walls[l];
-                    model.wallobjs[l] = new THREE.Mesh(geomFromWall(wall), model.wallmat);
-                    model.wallobjs[l].position.x = wall[0][0];
-                    model.wallobjs[l].position.y = 0;
-                    model.wallobjs[l].position.z = wall[0][1];
-                    scene.add(model.wallobjs[l]);
-                }
                 outdata['wallnums'][name] = model.walls.length;
-                // render new walls
             }
-            // rerender updated wall
         }
+        scoreboard[name].innerHTML = player.score;
         model = models[name];
         model.obj.position.x = player.x;
         model.obj.position.z = player.y;

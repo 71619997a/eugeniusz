@@ -15,20 +15,28 @@ class Game(object):  # one game
         self.size = settings['size']
         self.maxplayers = settings['maxplayers']
         self.speed = settings['speed']
+        self.timeout = 600  # 5 second timeout before game start
+        self.roundEnding = False
+        self.gameEnding = False
+        self.gameEndsSoon = False
+        self.alive = 0
+        self.scores = []
+        self.starting = False
 
     def data(self, json):
         ret = {}
-        for player in self.players:
+        for i in xrange(len(self.players)):
+            player = self.players[i]
             if player.dead:
                 print player.name, 'dead'
                 ret[player.name] = {'dead': True}
                 continue
             if player.name in json['wallnums']:
-                wallIdx = json['wallnums'][player.name] - 1
+                wallIdx = max(json['wallnums'][player.name] - 1, 0)  # 1 buffer zone, 2 wall misses is extremely unlikely
             else:
                 wallIdx = 0
             newWalls = [wall.ends() for wall in player.walls[wallIdx:]]
-            ret[player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'updatedwall': wallIdx, 'nwalls': len(player.walls), 'walls': newWalls}
+            ret[player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'updatedwall': wallIdx, 'nwalls': len(player.walls), 'walls': newWalls, 'score': self.scores[i]}
         return ret
 
     def update(self, json):
@@ -61,22 +69,24 @@ class Game(object):  # one game
             return
         if user in self.pdict:
             return
+        self.alive += 1
         pidx = len(self.players)
         x, y, dir = self.spawnP(pidx)
         player = Player(user, x/self.speed*self.speed, y/self.speed*self.speed, dir, PCOLORS[pidx])
         print player.x, player.y
         self.players.append(player)
         self.pdict[user] = player
+        self.scores.append(0)
 
     def removeUser(self, user):
-        player = pdict[user]
+        player = self.pdict[user]
         self.pdict.pop(user, 0)
         self.players.remove(player)
         del player
 
     def getPlayer(self, name):
         return self.pdict[name]
-            
+
     def keyDir(self, key):
         if key == 'D':
             return 1
@@ -86,8 +96,46 @@ class Game(object):  # one game
 
     def killPlayer(self, player):
         player.dead = True
+        player.walls = []
+        self.alive -= 1
+
+    def respawnPlayers(self):
+        for i in range(len(self.players)):
+            player = self.players[i]
+            x, y, dir = self.spawnP(i)
+            player.x = x / self.speed * self.speed
+            player.y = y / self.speed * self.speed
+            player.dir = dir
+            player.dead = False
+            player.walls = [Wall(dir, x, y)]
 
     def runFrame(self):
+        if self.timeout > 0:
+            print self.timeout
+            self.timeout -= 1
+            return
+        if self.alive <= 1:  # on round end, wait 3 seconds, then respawn
+            i = None
+            for i in range(len(self.players)):
+                if not self.players[i].dead:
+                    break
+            if i is not None:  # if it is, we don't update score b/c tie
+                self.scores[i] += 1
+                if self.scores[i] >= 3:
+                    # update player database with new wins/losses
+                    self.timeout += 600  # 8 seconds for game end? sure
+                    self.gameEndsSoon = True
+            self.timeout = 360
+            self.roundEnding = True
+            self.alive = len(self.players)
+            return
+        if self.gameEndsSoon:
+            self.gameEnding = True
+            return
+        if self.roundEnding:
+            self.roundEnding = False
+            self.respawnPlayers()  # now do 1 tick so clients see update
+            self.timeout = 360  # wait 3 more seconds until start
         horizontals = {}
         verticals = {}
         # 0. move so that we dont hit just placed walls and

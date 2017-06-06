@@ -19,6 +19,8 @@ def removeUser(name):
 def join(pname, gname):
     game = getGame(gname)
     game.addUser(pname)
+    if len(game.players) == game.maxplayers:
+        game.starting = True
     pdict[pname] = game
 
 def endGame(name):
@@ -41,5 +43,9 @@ def update(json):
 def run():
     while(1):
         for game in games:
+            if not game.starting:
+                continue
             game.runFrame()
+            if game.gameEnding:
+                endGame(game.name)
         eventlet.sleep(1./120)
