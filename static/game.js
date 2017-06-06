@@ -107,7 +107,6 @@ function init() {
 
     // walls
     walltex = new THREE.ImageUtils.loadTexture('../static/model/walltex.png');
-
     // renderer
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio( window.devicePixelRatio );
