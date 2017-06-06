@@ -65,3 +65,7 @@ gabrielM -- 2017-06-05 7:00
     - Separate rounds (glitchy)
     - Score
     - Game end-ish (not working very well)
+
+nobelG -- 2017-06-05 20:21
+    - Server list
+    - Server creation

@@ -60,30 +60,35 @@ def onlogout():
     session.pop('user')
     return redirect(url_for('home'))
 
-@app.route('/game')
+@app.route('/game/', methods=['POST'])
 def play():
-    gamename = request.args.get('name')
-    if "user" not in session:
-        return redirect(url_for('login'))
-    settings = gm.getGame(gamename).settings
-    return render_template('index.html', username=session['user'], gamename=gamename, settings=settings)
+    if request.method == 'POST':
+        gamename = request.form['submit']
+        #gamename = request.args.get('value')
+        #print "GAME NAME: ", gamename
+        if "user" not in session:
+            return redirect(url_for('login'))
+        settings = gm.getGame(gamename).settings
+        return render_template('index.html', username=session['user'], gamename=gamename, settings=settings)
+    return render_template('server.html', gamelist=gm.games)
 
-@app.route('/servers')
+@app.route('/servers/')
 def server():
-    return render_template('server.html')
+    return render_template('server.html', gamelist=gm.games)
 
-@app.route('/create', methods=['GET', 'POST'])
+@app.route('/create/', methods=['GET', 'POST'])
 def create():
     if request.method == 'POST':
         name = request.form['servername']
-        players = request.form['numPlayers']
+        players = int(request.form['numPlayers'])
         if players < 2 or players > 4:
-            return render_template('create.html')
+            return render_template('create.html', err="invalid player size")
         speed = request.form['playerspeed']
-        size = request.form['size']
+        size = int(request.form['size'])
         if size < 2000 or size > 20000:
-            return render_template('create.html')
+            return render_template('create.html', err="invalid field size")
         gm.createGame(name, size=2000, maxplayers=players, speed=speed)
+        return render_template("index.html", username=session['user'], gamename=name, settings=gm.getGame(name).settings)
     return render_template('create.html')
 
 
