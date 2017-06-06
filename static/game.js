@@ -190,7 +190,7 @@ function animate() {
         console.log('Possible disconnect, waiting 10 seconds until leaving...')
     }
     if(sinceLast == 780) {  // thirteen sec?
-        window.location.replace(baseurl);
+        window.location.replace(baseurl + '/servers');
     }
 }
 
