@@ -42,14 +42,15 @@ def get_all_users(db):
     return L
 
 @db_f
-def incScore(player):
+def incScore(db, player):
     cur = db.cursor()
     q = 'UPDATE users SET score = score + 1 WHERE username=?'
     cur.execute(q, (player.name,))
     db.commit()
 
-def getScore(user):
+@db_f
+def getScore(db, user):
     cur = db.cursor()
     q = 'SELECT score FROM users WHERE username=?'
     cur.execute(q, (user,))
-    return cur.fetchone()
+    return cur.fetchone()[0]

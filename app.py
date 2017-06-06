@@ -76,11 +76,17 @@ def play():
 
 @app.route('/servers/')
 def server():
-    return render_template('server.html', gamelist=gm.games)
-	
+    if 'user' in session:
+        return render_template('server.html', gamelist=gm.games)
+    return redirect(url_for('login'))
+
 @app.route('/user/')
 def user():
-	return render_template('user.html')
+    if 'user' in session:
+        print 'IOOOOOOOOOOOOOOOOOOOOOOOOOOO'
+        print session['user']
+        return render_template('user.html', score = sql.getScore(  session['user']  ) )
+    return resirect(url_for('login'))
 
 @app.route('/create/', methods=['GET', 'POST'])
 def create():
