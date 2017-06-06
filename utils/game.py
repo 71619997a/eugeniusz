@@ -36,6 +36,9 @@ class Game(object):  # one game
                 wallIdx = 0
             newWalls = [wall.ends() for wall in player.walls[wallIdx:]]
             ret['players'][player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'updatedwall': wallIdx, 'nwalls': len(player.walls), 'walls': newWalls, 'score': self.scores[i]}
+            
+            # newWalls = [wall.ends() for wall in player.walls]
+            # ret['players'][player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'walls': newWalls, 'score': self.scores[i]}
         return ret
 
     def update(self, json):

@@ -335,6 +335,26 @@ function update() {
         else {
             model = models[name];
             if(player.hasOwnProperty('walls') && !waiting) {
+            //     for(var i = 0; i < player.walls.length; i++) {
+            //         wall = player.walls[i]
+            //         if(i < model.walls.length) {
+            //             if(model.walls[i] !== wall) {
+            //                 model.walls[i] = wall;
+            //                 model.wallobjs[i].geometry = geomFromWall(wall);
+            //             }
+            //         }
+            //         else {
+            //             model.walls.push(player.walls[i]);
+            //             newobj = new THREE.Mesh(geomFromWall(wall), model.wallmat);
+            //             newobj.position.x = wall[0][0];
+            //             newobj.position.y = 0;
+            //             newobj.position.z = wall[0][1];
+            //             model.wallobjs.push(newobj);
+            //             scene.add(model.wallobjs[l]);
+            //         }
+            //     }
+            // }
+
                 if(player.nwalls !== 0) {
                     if(model.walls.length > 0) {
                         if (player.updatedwall === model.walls.length - 1) {
