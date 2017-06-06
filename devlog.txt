@@ -60,3 +60,8 @@ farhanH -- 2017-06-04 18:30
 
 seijiY + gabrielM -- 2017-06-05 2:50
     -Fix camera bug when player dies
+
+gabrielM -- 2017-06-05 7:00
+    - Separate rounds (glitchy)
+    - Score
+    - Game end-ish (not working very well)
