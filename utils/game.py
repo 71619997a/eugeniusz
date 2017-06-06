@@ -124,9 +124,9 @@ class Game(object):  # one game
                 self.scores[i] += 1
                 if self.scores[i] >= 3:
                     # update player database with new wins/losses
-                    self.timeout += 600  # 8 seconds for game end? sure
+                    self.timeout += 300  # 8 seconds for game end? sure
                     self.gameEndsSoon = True
-            self.timeout = 360
+            self.timeout = 180
             self.roundEnding = True
             self.alive = len(self.players)
             return
@@ -136,7 +136,7 @@ class Game(object):  # one game
         if self.roundEnding:
             self.roundEnding = False
             self.respawnPlayers()  # now do 1 tick so clients see update
-            self.timeout = 360  # wait 3 more seconds until start
+            self.timeout = 180  # wait 3 more seconds until start
         horizontals = {}
         verticals = {}
         # 0. move so that we dont hit just placed walls and

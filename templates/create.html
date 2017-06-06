@@ -55,12 +55,18 @@ button:create
                     <h1><strong>CREATE</strong> A Server</h1>
                 </div>
             </div>
+
+            {% if err %}
+            <div>
+                <p>{{err}}</p>
+            </div>
+            {% endif %}
 			
             
             <div class="row">
 				
                 <div class="col-sm-6 col-sm-offset-3 form-box">	
-					<form method="POST">
+					<form action="/create/" method="POST">
 						<!--Name Box-->
 						<div class="box">
 							<h3>Name of Server</h3>
@@ -73,24 +79,24 @@ button:create
 						<div class="box">
 							<h3>Number of Players</h3>
 							<!--Slider output display taken from https://stackoverflow.com/questions/10004723/html5-input-type-range-show-range-value-->
-							<input type="range" name="numplayers" min="2" max="4" onchange="updatePlayerInput(this.value);">
-							<input type="text" class="form-control" id="playerInput" value="">
+							<input type="range" min="2" max="4" onchange="updatePlayerInput(this.value);">
+							<input type="text" name="numPlayers" class="form-control" id="playerInput" value="">
 						</div>
 
 						<br>
 						<!--Speed Box-->
 						<div class="box">
 							<h3>User Velocity</h3>
-							<input type="range" name="playerspeed" min="2" max="10" onchange="updateSpeedInput(this.value);">
-							<input type="text" class="form-control" id="speedInput" value="">
+							<input type="range" min="2" max="10" onchange="updateSpeedInput(this.value);">
+							<input type="text" name="playerspeed" class="form-control" id="speedInput" value="">
 						</div>
 
 						<br>
 						<!--Dimension Box-->
 						<div class="box">
 							<h3>Field Size</h3>
-							<input type="range" name="size" min="2000" max="20000" step="1000" onchange="updateLengthInput(this.value);">
-							<input type="text" class="form-control" id="lengthInput" value="">
+							<input type="range" min="2000" max="20000" step="1000" onchange="updateLengthInput(this.value);">
+							<input type="text" name="size" class="form-control" id="lengthInput" value="">
 						</div>							
 						
 						<script>

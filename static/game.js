@@ -260,7 +260,7 @@ function toCSSColor(col) {
 function update() {
     if(data.timeout > 0) {
         waiting = true;
-        countdown.innerHTML = Math.ceil(data.timeout / 120).toString();
+        countdown.innerHTML = Math.ceil(data.timeout / 60).toString();
         if(!CDon) {
             document.body.appendChild(countdown);
             CDon = true;

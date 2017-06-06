@@ -46,11 +46,12 @@
 
             <!--Begin Login Box-->
 		    <div class="row">
-				<form action="/authenticate/" method="POST">
-					<button type="submit" class="btn btn-login">Server 1</button>
-					<br>
-					<br>
-					<button type="submit" class="btn btn-login">Server 2</button>
+				<form action="/game/" method="POST">
+                    {% for game in gamelist %}
+                    <button type="submit" name="submit" class="btn btn-login" value="{{game.name}}">{{game.name}}</button>
+                    <br>
+                    <br>
+                    {% endfor %}
 				</form>				
             </div>
         </div>
@@ -61,7 +62,7 @@
 				<div class="container-fluid">
 					
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#">Create A Server</a></li>
+						<li><a href="/create/">Create A Server</a></li>
 					</ul>
 				
 				</div>
