@@ -8,7 +8,7 @@ var data = {};
 var newData = {};
 var outdata = {'username': username, 'wallnums': {}}
 var mouseX = 0, mouseY = 0, loaded = false, color = 'blu';
-var fov = 50;
+var fov = 80;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 var sinceLast = 0;
@@ -378,7 +378,7 @@ function update() {
         model.obj.rotation.y = 3 * Math.PI - player.dir * Math.PI / 2;
         if(name === username) {
             // Camera 1: behind 
-            var cameraOffset = new THREE.Vector3(50,150,200);
+            var cameraOffset = new THREE.Vector3(0,100,200);
             var axis = new THREE.Vector3(0,1,0);
             var angle = model.obj.rotation.y - Math.PI;
             cameraOffset.applyAxisAngle(axis,angle);
