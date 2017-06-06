@@ -100,14 +100,12 @@ def create():
 
 @socketio.on('getdata')
 def givedata(json):
-    print 'client requested data'
     data = gm.data(json)
     if data is not None:
         emit('data', gm.data(json))
 
 @socketio.on('sendinput')
 def updatedata(json):
-    print 'client sent data'
     gm.update(json)
 
 @socketio.on('connect')
