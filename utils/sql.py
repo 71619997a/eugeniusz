@@ -19,14 +19,14 @@ def db_f(func):
 @db_f
 def init(db):
     cur = db.cursor()
-    cur.execute("CREATE TABLE users (username TEXT, password TEXT, score INTEGER)")
+    cur.execute("CREATE TABLE users (username TEXT, password TEXT, wins INTEGER, losses INTEGER)")
     db.commit()
 
 
 @db_f
 def add_user(db, user, password):
     cur = db.cursor()
-    q = "INSERT INTO users VALUES (?, ?, 0)"
+    q = "INSERT INTO users VALUES (?, ?, 0, 0)"
 
     cur.execute(q, (user, password))
     db.commit()
@@ -42,15 +42,29 @@ def get_all_users(db):
     return L
 
 @db_f
-def incScore(db, player):
+def incWins(db, player):
     cur = db.cursor()
-    q = 'UPDATE users SET score = score + 1 WHERE username=?'
+    q = 'UPDATE users SET wins = wins + 1 WHERE username=?'
     cur.execute(q, (player.name,))
     db.commit()
 
 @db_f
-def getScore(db, user):
+def incLosses(db, player):
     cur = db.cursor()
-    q = 'SELECT score FROM users WHERE username=?'
+    q = 'UPDATE users SET losses = losses + 1 WHERE username=?'
+    cur.execute(q, (player.name,))
+    db.commit()
+
+@db_f
+def getWins(db, user):
+    cur = db.cursor()
+    q = 'SELECT wins FROM users WHERE username=?'
+    cur.execute(q, (user,))
+    return cur.fetchone()[0]
+
+@db_f
+def getLosses(db, user):
+    cur = db.cursor()
+    q = 'SELECT losses FROM users WHERE username=?'
     cur.execute(q, (user,))
     return cur.fetchone()[0]

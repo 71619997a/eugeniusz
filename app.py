@@ -85,7 +85,7 @@ def user():
     if 'user' in session:
         print 'IOOOOOOOOOOOOOOOOOOOOOOOOOOO'
         print session['user']
-        return render_template('user.html', score = sql.getScore(  session['user']  ) )
+        return render_template('user.html', name=session['user'], wins = sql.getWins(  session['user']  ), losses=sql.getLosses(session['user']) )
     return resirect(url_for('login'))
 
 @app.route('/create/', methods=['GET', 'POST'])

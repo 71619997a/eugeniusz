@@ -116,11 +116,6 @@ class Game(object):  # one game
             player.walls = [Wall(dir, x, y)]
 
     def runFrame(self):
-        if len(player for player in self.players if not player.dead) == 1:
-            self.end = player
-            sql.incScore(player)
-
-
         if self.timeout > 0:
             self.timeout -= 1
             return
@@ -133,6 +128,10 @@ class Game(object):  # one game
             if i is not None:  # if it is, we don't update score b/c tie
                 self.scores[i] += 1
                 if self.scores[i] >= 3:
+                    sql.incWins(self.players[i])
+                    for j in range(len(self.players)):
+                        if i != j:
+                            sql.incLosses(self.players[j])
                     # update player database with new wins/losses
                     self.timeout += 300  # 8 seconds for game end? sure
                     self.gameEndsSoon = True
