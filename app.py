@@ -17,6 +17,8 @@ socketio = SocketIO(app)
 
 @app.route('/')
 def home():
+    if 'user' in session:
+        return redirect(url_for('server'))
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
