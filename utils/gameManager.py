@@ -44,12 +44,18 @@ def update(json):
 def run():
     while(1):
         t = time()
-        for game in games:
+        i = 0
+        l = len(games)
+        while i < l:
+            game = games[i]
             if not game.starting:
                 continue
             game.runFrame()
             if game.gameEnding:
                 endGame(game.name)
+                i -= 1
+                l -= 1
+            i += 1
         elapsed = time() - t
         slptime = max(0, 1./120 - elapsed)
         eventlet.sleep(slptime)

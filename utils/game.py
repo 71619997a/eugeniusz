@@ -182,7 +182,14 @@ class Game(object):  # one game
                 s, e = horizontals[player.y]
                 if player.x >= s and player.x <= e:
                     self.killPlayer(player)
-                    print 'player is dead!'
                     continue
+            for p2 in self.players:
+                if not p2.dead:
+                    if p2.x == player.x and p2.y == player.y:
+                        self.killPlayer(player)
+                        self.killPlayer(p2)
+                        continue
+            
+            
             player.walls[-1].inc(self.speed if player.dir % 3 else -self.speed)
 
