@@ -73,3 +73,6 @@ nobelG -- 2017-06-05 20:21
 gabrielM -- 2017-06-05 23:00
     - direct player collision
     -various fixes
+
+gabrielM -- 2017-06-06 0:00
+    - user page fixes
