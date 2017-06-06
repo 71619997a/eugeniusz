@@ -4,6 +4,7 @@ from player import Player
 from wall import Wall
 from constants import *
 from random import randint
+import sql
 
 class Game(object):  # one game
     def __init__(self, name, **settings):
@@ -22,6 +23,7 @@ class Game(object):  # one game
         self.alive = 0
         self.scores = []
         self.starting = False
+        self.win = None
 
     def data(self, json):
         ret = {'players': {}, 'timeout': self.timeout}
@@ -114,6 +116,11 @@ class Game(object):  # one game
             player.walls = [Wall(dir, x, y)]
 
     def runFrame(self):
+        if len(player for player in self.players if not player.dead) == 1:
+            self.end = player
+            sql.incScore(player)
+
+
         if self.timeout > 0:
             self.timeout -= 1
             return
