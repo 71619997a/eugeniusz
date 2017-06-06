@@ -208,9 +208,9 @@ function animate() {
     socket.emit('getdata', outdata);
     sinceLast++;
     if(sinceLast == 180) {  // three sec?
-        console.log('Possible disconnect, waiting 10 seconds until leaving...')
+        console.log('Possible disconnect, waiting 5 seconds until leaving...')
     }
-    if(sinceLast == 780) {  // thirteen sec?
+    if(sinceLast == 480) {  // eight sec?
         window.location.replace(baseurl + '/servers');
     }
 }

@@ -110,6 +110,7 @@ class Game(object):  # one game
             player.walls = [Wall(dir, x, y)]
 
     def runFrame(self):
+        print self.alive
         if self.timeout > 0:
             print self.timeout
             self.timeout -= 1
@@ -137,6 +138,7 @@ class Game(object):  # one game
             self.roundEnding = False
             self.respawnPlayers()  # now do 1 tick so clients see update
             self.timeout = 180  # wait 3 more seconds until start
+        print self.alive
         horizontals = {}
         verticals = {}
         # 0. move so that we dont hit just placed walls and
@@ -183,13 +185,6 @@ class Game(object):  # one game
                 if player.x >= s and player.x <= e:
                     self.killPlayer(player)
                     continue
-            for p2 in self.players:
-                if not p2.dead:
-                    if p2.x == player.x and p2.y == player.y and p2.name != player.name:
-                        self.killPlayer(player)
-                        self.killPlayer(p2)
-                        continue
-            
             
             player.walls[-1].inc(self.speed if player.dir % 3 else -self.speed)
 

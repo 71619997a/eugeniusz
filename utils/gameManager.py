@@ -51,6 +51,7 @@ def run():
             if not game.starting:
                 i += 1
                 continue
+            print 'running' + str(i)
             game.runFrame()
             if game.gameEnding:
                 endGame(game.name)
