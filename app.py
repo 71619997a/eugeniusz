@@ -81,9 +81,9 @@ def create():
             return render_template('create.html')
         speed = request.form['playerspeed']
         size = request.form['size']
-        if size < 2000 or size > 20000:
+        if size < 1000 or size > 20000:
             return render_template('create.html')
-        gm.createGame(name, size=2000, maxplayers=players, speed=speed)
+        gm.createGame(name, size=size, maxplayers=players, speed=speed)
     return render_template('create.html')
 
 

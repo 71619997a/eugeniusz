@@ -24,9 +24,7 @@ class Game(object):  # one game
         self.starting = False
 
     def data(self, json):
-        if timeout > 0:
-            return None
-        ret = {}
+        ret = {'players': {}, 'timeout': self.timeout}
         for i in xrange(len(self.players)):
             player = self.players[i]
             if player.dead:
@@ -38,7 +36,7 @@ class Game(object):  # one game
             else:
                 wallIdx = 0
             newWalls = [wall.ends() for wall in player.walls[wallIdx:]]
-            ret[player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'updatedwall': wallIdx, 'nwalls': len(player.walls), 'walls': newWalls, 'score': self.scores[i]}
+            ret['players'][player.name] = {'x': player.x, 'y': player.y, 'dir': player.dir, 'color': player.color, 'updatedwall': wallIdx, 'nwalls': len(player.walls), 'walls': newWalls, 'score': self.scores[i]}
         return ret
 
     def update(self, json):

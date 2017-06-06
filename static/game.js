@@ -14,6 +14,17 @@ var windowHalfY = window.innerHeight / 2;
 var sinceLast = 0;
 var baseurl = 'http://' + document.domain + ':' + location.port
 var socket = io.connect(baseurl);
+var countdown = document.createElement('p');
+var CDon = false;
+var waiting = true;
+countdown.style.fontFamily = 'sans-serif';
+countdown.style.fontSize = '100'
+countdown.style.position = 'absolute'
+countdown.style.margin = 'auto'
+countdown.style.width = '50%'
+countdown.style.fontWeight = '900';
+countdown.style.textAlign = 'center';
+countdown.zIndex = 200;
 socket.emit('getdata', outdata);
 socket.emit('sendinput', {username: username, event: 'none'});
 
@@ -245,10 +256,25 @@ function toCSSColor(col) {
 }
 
 function update() {
-    for(var name in data) {
-        if(!data.hasOwnProperty(name))
+    if(data.timeout > 0) {
+        waiting = true;
+        countdown.innerHTML = Math.ceil(data.timeout / 120);
+        if(!CDon) {
+            document.body.appendChild(countdown);
+            CDon = true;
+        }
+    }
+    else {
+        waiting = false;
+    }
+    if(CDon) {
+        CDon = false;
+        document.body.removeChild(countdown);
+    }
+    for(var name in data.players) {
+        if(!data.players.hasOwnProperty(name))
             continue;
-        player = data[name];
+        player = data.players[name];
         if(player.hasOwnProperty('dead')) {
             if(models.hasOwnProperty(name)) {  // delete model and walls
                 console.log("Running dying code");
@@ -307,7 +333,7 @@ function update() {
         }
         else {
             model = models[name];
-            if(player.hasOwnProperty('walls')) {
+            if(player.hasOwnProperty('walls') && !waiting) {
                 if(player.nwalls !== 0) {
                     if (player.updatedwall === model.walls.length - 1) {
                         console.log("updating latest wall");
