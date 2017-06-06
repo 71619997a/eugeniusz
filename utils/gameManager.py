@@ -52,6 +52,6 @@ def run():
                 endGame(game.name)
         elapsed = time() - t
         # print elapsed
-        slptime = max(0, 1./120 - elapsed)
+        slptime = max(0, 1./240 - elapsed)
         # print slptime
         eventlet.sleep(slptime)

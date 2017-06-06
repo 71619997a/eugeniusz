@@ -17,14 +17,16 @@ var socket = io.connect(baseurl);
 var countdown = document.createElement('p');
 var CDon = false;
 var waiting = true;
+countdown.style.position = 'absolute';
 countdown.style.fontFamily = 'sans-serif';
-countdown.style.fontSize = '100'
-countdown.style.position = 'absolute'
-countdown.style.margin = 'auto'
-countdown.style.width = '50%'
+countdown.style.fontSize = '200';
+countdown.style.width = '100%';
+countdown.style.height = '400px';
 countdown.style.fontWeight = '900';
 countdown.style.textAlign = 'center';
-countdown.zIndex = 200;
+countdown.style.top = '0';
+countdown.style.zIndex = '200';
+countdown.style.color = '#D01515';
 socket.emit('getdata', outdata);
 socket.emit('sendinput', {username: username, event: 'none'});
 
@@ -258,7 +260,7 @@ function toCSSColor(col) {
 function update() {
     if(data.timeout > 0) {
         waiting = true;
-        countdown.innerHTML = Math.ceil(data.timeout / 120);
+        countdown.innerHTML = Math.ceil(data.timeout / 120).toString();
         if(!CDon) {
             document.body.appendChild(countdown);
             CDon = true;
@@ -266,10 +268,10 @@ function update() {
     }
     else {
         waiting = false;
-    }
-    if(CDon) {
-        CDon = false;
-        document.body.removeChild(countdown);
+        if(CDon) {
+            CDon = false;
+            document.body.removeChild(countdown);
+        }
     }
     for(var name in data.players) {
         if(!data.players.hasOwnProperty(name))
@@ -335,23 +337,25 @@ function update() {
             model = models[name];
             if(player.hasOwnProperty('walls') && !waiting) {
                 if(player.nwalls !== 0) {
-                    if (player.updatedwall === model.walls.length - 1) {
-                        console.log("updating latest wall");
-                        model.walls[player.updatedwall] = player.walls[0];
-                        model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[0]);
-                    }
-                    else {
-                        console.log("searching for correct wall to update");
-                        start = model.walls[model.walls.length - 1][0];
-                        var idx = 0;
-                        while(idx < player.walls.length) {
-                            if (player.walls[idx][0] === start) {
-                                model.walls[model.walls.length - 1] = player.walls[idx];
-                                model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[idx]);
-                                console.log("wall found");
-                                break;
+                    if(model.walls.length > 0) {
+                        if (player.updatedwall === model.walls.length - 1) {
+                            console.log("updating latest wall");
+                            model.walls[player.updatedwall] = player.walls[0];
+                            model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[0]);
+                        }
+                        else {
+                            console.log("searching for correct wall to update");
+                            start = model.walls[model.walls.length - 1][0];
+                            var idx = 0;
+                            while(idx < player.walls.length) {
+                                if (player.walls[idx][0] === start) {
+                                    model.walls[model.walls.length - 1] = player.walls[idx];
+                                    model.wallobjs[player.updatedwall].geometry = geomFromWall(player.walls[idx]);
+                                    console.log("wall found");
+                                    break;
+                                }
+                                idx++;
                             }
-                            idx++;
                         }
                     }
                     var l = model.walls.length;

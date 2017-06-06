@@ -29,7 +29,7 @@ class Game(object):  # one game
             player = self.players[i]
             if player.dead:
                 print player.name, 'dead'
-                ret[player.name] = {'dead': True}
+                ret['players'][player.name] = {'dead': True}
                 continue
             if player.name in json['wallnums']:
                 wallIdx = max(json['wallnums'][player.name] - 1, 0)  # 1 buffer zone, 2 wall misses is extremely unlikely
@@ -118,6 +118,7 @@ class Game(object):  # one game
             i = None
             for i in range(len(self.players)):
                 if not self.players[i].dead:
+                    self.players[i].dead = True
                     break
             if i is not None:  # if it is, we don't update score b/c tie
                 self.scores[i] += 1
