@@ -69,3 +69,7 @@ gabrielM -- 2017-06-05 7:00
 nobelG -- 2017-06-05 20:21
     - Server list
     - Server creation
+
+gabrielM -- 2017-06-05 23:00
+    - direct player collision
+    -various fixes

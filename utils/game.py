@@ -30,7 +30,6 @@ class Game(object):  # one game
         for i in xrange(len(self.players)):
             player = self.players[i]
             if player.dead:
-                print player.name, 'dead'
                 ret['players'][player.name] = {'dead': True}
                 continue
             if player.name in json['wallnums']:
@@ -97,6 +96,8 @@ class Game(object):  # one game
         return 0
 
     def killPlayer(self, player):
+        if player.dead:
+            return
         player.dead = True
         player.walls = []
         self.alive -= 1
@@ -118,7 +119,6 @@ class Game(object):  # one game
 
 
         if self.timeout > 0:
-            print self.timeout
             self.timeout -= 1
             return
         if self.alive <= 1:  # on round end, wait 3 seconds, then respawn
@@ -172,7 +172,6 @@ class Game(object):  # one game
                 player.y += self.speed
             elif player.dir == LEFT:
                 player.x -= self.speed
-            print player.x, player.y
         # 2. check collisions and inc wall
         for player in self.players:
             if player.dead:
@@ -181,22 +180,29 @@ class Game(object):  # one game
                 self.killPlayer(player)
                 continue
             if player.x in verticals:
+                print 'player crossed vwall'
                 s, e = verticals[player.x]
+                print s, player.y, e
                 if player.y >= s and player.y <= e:
                     self.killPlayer(player)
                     continue
             if player.y in horizontals:
+                print 'player crossed hwall'
                 s, e = horizontals[player.y]
+                print s, player.x, e
                 if player.x >= s and player.x <= e:
                     self.killPlayer(player)
                     continue
+            skip = False
             for p2 in self.players:
-                if not p2.dead:
-                    if p2.x == player.x and p2.y == player.y and p2.name != player.name:
-                        self.killPlayer(player)
-                        self.killPlayer(p2)
-                        continue
-
-
+                print 'in it'
+                if p2 == player:
+                    continue
+                if p2.x == player.x and p2.y == player.y:
+                    self.killPlayer(p2)
+                    self.killPlayer(player)
+                    skip = True
+            if skip:
+                continue
             player.walls[-1].inc(self.speed if player.dir % 3 else -self.speed)
 
