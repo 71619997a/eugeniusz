@@ -85,7 +85,9 @@ def create():
 @socketio.on('getdata')
 def givedata(json):
     print 'client requested data'
-    emit('data', gm.data(json))
+    data = gm.data(json)
+    if data is not None:
+        emit('data', gm.data(json))
 
 @socketio.on('sendinput')
 def updatedata(json):

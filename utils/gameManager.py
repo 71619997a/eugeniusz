@@ -1,5 +1,6 @@
 from game import Game
 import eventlet
+from time import time
 games = []
 gdict = {}
 pdict = {}
@@ -42,10 +43,15 @@ def update(json):
 
 def run():
     while(1):
+        t = time()
         for game in games:
             if not game.starting:
                 continue
             game.runFrame()
             if game.gameEnding:
                 endGame(game.name)
-        eventlet.sleep(1./120)
+        elapsed = time() - t
+        print elapsed
+        slptime = max(0, 1./120 - elapsed)
+        # print slptime
+        eventlet.sleep(slptime)

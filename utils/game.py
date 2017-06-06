@@ -24,6 +24,8 @@ class Game(object):  # one game
         self.starting = False
 
     def data(self, json):
+        if timeout > 0:
+            return None
         ret = {}
         for i in xrange(len(self.players)):
             player = self.players[i]
