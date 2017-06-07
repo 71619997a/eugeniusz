@@ -93,7 +93,7 @@ function init() {
 
 
     // floor
-    var floorTexture = new THREE.ImageUtils.loadTexture('../static/img/checkerboard.jpg');
+    var floorTexture = new THREE.ImageUtils.loadTexture('../static/img/checkerboard.png');
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(size/100, size/100);
     var floorMaterial = new THREE.MeshBasicMaterial( {map:floorTexture, side: THREE.DoubleSide} )
