@@ -1,6 +1,11 @@
 import eventlet
 import sqlite3
 eventlet.monkey_patch(os=False)
+import os
+from utils import constants
+DIR = os.path.dirname(__file__) or '.'
+DIR += '/'
+constants.setDir(DIR)
 from flask import Flask, render_template, session, request, redirect, url_for
 from flask_socketio import SocketIO, emit, send, SocketIOTestClient
 import utils
@@ -8,13 +13,25 @@ from utils import gameManager as gm
 from utils import users as u
 from utils import sql
 import thread
-import os
 import sys
-from utils import constants
+
 
 app = Flask(__name__)
 app.secret_key = 'as9pdfuhasodifuhasiodfhuasiodfhuasiodfhuasodifuh'
 socketio = SocketIO(app)
+
+print 'work'
+
+f = DIR + "data/users.db"
+if not os.path.exists(f) or os.path.getsize(f) == 0:
+    db = sqlite3.connect(f)
+    sql.init(db)
+    db.close()
+    # sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # no buffer
+print 'Starting game thread'
+gm.createGame('game1', size=2000, maxplayers=4, speed=5)
+thread.start_new_thread(gm.run, ())
+print 'Started game thread'
 
 @app.route('/')
 def home():
@@ -126,19 +143,6 @@ def newuser(json):
     gm.join(json['username'], json['gamename'])
 
 if __name__ == '__main__':
-    DIR = os.path.dirname(__file__) or '.'
-    DIR += '/'
-    constants.setDir(DIR)
-    f = DIR + "data/users.db"
-    if not os.path.exists(f) or os.path.getsize(f) == 0:
-        db = sqlite3.connect(f)
-        sql.init(db)
-        db.close()
-    # sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # no buffer
-    print 'Starting game thread'
-    gm.createGame('game1', size=2000, maxplayers=4, speed=5)
-    thread.start_new_thread(gm.run, ())
-    print 'Started game thread'
     app.debug = True
     # test
     # tc = SocketIOTestClient(app, socketio)
