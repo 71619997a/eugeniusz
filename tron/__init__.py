@@ -24,6 +24,8 @@ print 'work'
 
 f = DIR + "data/users.db"
 print f
+if not os.path.exists(DIR + 'data'):
+    os.makedirs(DIR + 'data')
 if not os.path.exists(f) or os.path.getsize(f) == 0:
     db = sqlite3.connect(f)
     sql.init(db)

@@ -10,3 +10,8 @@ IMPORTANT: Make sure to install the python dependencies by running `pip install 
 
 Run the game with `python tron/__init__.py` and go to http://localhost:5000
 
+## Running under Apache
+
+Install the dependencies as above.
+IMPORTANT: Run ' chown www-data. tron/data '. This is extremely important for the database to work.
+IMPORTANT: Apache doesn't work with SocketIO or websockets in general, so the game is broken. lol
