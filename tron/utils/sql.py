@@ -12,6 +12,7 @@ def db_f(func):
                 return func(*args, **kwargs)
         except IndexError:
             pass
+        print f
         db = sqlite3.connect(f)
         v = func(db, *args, **kwargs)
         db.close()
