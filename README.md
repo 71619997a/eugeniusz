@@ -6,6 +6,7 @@ Movement is controlled by AD. The trail is created as the light cycle automatica
 
 ## Running
 
-Make sure to install the python dependencies by running `pip install -r requirements.txt`
+IMPORTANT: Make sure to install the python dependencies by running `pip install -r requirements.txt`
 
-Run the game with `python app.py` and go to http://localhost:5000
+Run the game with `python tron/__init__.py` and go to http://localhost:5000
+

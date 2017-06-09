@@ -1,10 +1,10 @@
 import sqlite3
 import hashlib
 import sql
+from constants import DIR
 
-f = "data/users.db"
-db = sqlite3.connect(f)
-c = db.cursor()
+f = DIR + "data/users.db"
+
 
 def hash(a):
     return hashlib.sha512(a).hexdigest()

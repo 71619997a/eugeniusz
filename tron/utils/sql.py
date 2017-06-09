@@ -1,10 +1,13 @@
 import sqlite3
+from constants import DIR
 
-f = "data/users.db"
+f = DIR + 'data/users.db'
+
 
 def db_f(func):
     def wrapped(*args, **kwargs):  # handles locking and weird db issues
         try:
+    
             if isinstance(args[0], sqlite3.Connection):  # db is in args
                 return func(*args, **kwargs)
         except IndexError:

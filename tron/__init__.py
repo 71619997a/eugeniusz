@@ -10,6 +10,7 @@ from utils import sql
 import thread
 import os
 import sys
+from utils import constants
 
 app = Flask(__name__)
 app.secret_key = 'as9pdfuhasodifuhasiodfhuasiodfhuasiodfhuasodifuh'
@@ -125,12 +126,15 @@ def newuser(json):
     gm.join(json['username'], json['gamename'])
 
 if __name__ == '__main__':
-    f = "data/users.db"
+    DIR = os.path.dirname(__file__) or '.'
+    DIR += '/'
+    constants.setDir(DIR)
+    f = DIR + "data/users.db"
     if not os.path.exists(f) or os.path.getsize(f) == 0:
         db = sqlite3.connect(f)
         sql.init(db)
         db.close()
-    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # no buffer
+    # sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # no buffer
     print 'Starting game thread'
     gm.createGame('game1', size=2000, maxplayers=4, speed=5)
     thread.start_new_thread(gm.run, ())
